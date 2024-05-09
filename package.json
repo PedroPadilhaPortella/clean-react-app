@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/PedroPadilhaPortella/clean-react-app#readme",
   "devDependencies": {
-    "git-commit-msg-linter": "^5.0.7"
+    "@types/node": "^20.12.11",
+    "git-commit-msg-linter": "^5.0.7",
+    "typescript": "^5.4.5"
   }
 }
