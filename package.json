@@ -1,0 +1,23 @@
+{
+  "name": "clean-react-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PedroPadilhaPortella/clean-react-app.git"
+  },
+  "keywords": [],
+  "author": "pedropadilhaportella",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PedroPadilhaPortella/clean-react-app/issues"
+  },
+  "homepage": "https://github.com/PedroPadilhaPortella/clean-react-app#readme",
+  "devDependencies": {
+    "git-commit-msg-linter": "^5.0.7"
+  }
+}
