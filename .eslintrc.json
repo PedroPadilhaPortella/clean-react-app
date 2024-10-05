@@ -5,6 +5,10 @@
   },
   "rules": {
     "@typescript-eslint/consistent-type-definitions": "off",
-    "@typescript-eslint/strict-boolean-expressions": "off"
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/semi": "error",
+    "space-before-function-paren": "off",
+    "padded-blocks": "off",
+    "semi": "off"
   }
 }
