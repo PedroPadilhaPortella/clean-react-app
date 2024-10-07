@@ -4,8 +4,8 @@ import { AccountModel } from '@/domain/models/account.model';
 import { mockAccountModel, mockAuthentication } from '@/domain/test/account.mock';
 import { AuthenticationParams } from '@/domain/usecases/authentication.types';
 import faker from 'faker';
-import { HttpStatusCode } from '../../protocols/http/http-response.types';
-import { HttpPostClientSpy } from '../../test/http-client.mock';
+import { HttpStatusCode } from '../../protocols';
+import { HttpPostClientSpy } from '../../test';
 import { RemoteAuthentication } from './remote-authentication';
 
 type SutTypes = {

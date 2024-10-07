@@ -9,6 +9,7 @@
     "@typescript-eslint/semi": "error",
     "space-before-function-paren": "off",
     "padded-blocks": "off",
+    "eol-last": "off",
     "semi": "off"
   }
 }

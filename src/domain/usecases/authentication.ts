@@ -1,4 +1,4 @@
-import { AccountModel } from '../models/account.model';
+import { AccountModel } from '../models';
 import { AuthenticationParams } from './authentication.types';
 
 export interface Authentication {
