@@ -1,18 +1,8 @@
 import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react';
 import React from 'react';
+import faker from 'faker';
 import Login from './login';
-import { Validation } from '@/presentation/protocols/validation';
-
-class ValidationSpy implements Validation {
-  errorMessage: string;
-  input: object;
-
-  validate(input: object): string {
-    this.input = input;
-    return this.errorMessage;
-  }
-
-}
+import { ValidationSpy } from '@/presentation/test';
 
 type SutTypes = {
   sut: RenderResult
@@ -50,14 +40,18 @@ describe('Login Component', () => {
   test('Should call validation with correct email', () => {
     const { sut, validationSpy } = createSut();
     const emailInput = sut.getByTestId('email');
-    fireEvent.input(emailInput, { target: { value: 'any_email' } });
-    expect(validationSpy.input).toEqual({ email: 'any_email' });
+    const fakeEmail = faker.internet.email();
+    fireEvent.input(emailInput, { target: { value: fakeEmail } });
+    expect(validationSpy.fieldName).toEqual('email');
+    expect(validationSpy.fieldValue).toEqual(fakeEmail);
   });
 
   test('Should call validation with correct password', () => {
     const { sut, validationSpy } = createSut();
     const passwordInput = sut.getByTestId('password');
-    fireEvent.input(passwordInput, { target: { value: 'any_password' } });
-    expect(validationSpy.input).toEqual({ password: 'any_password' });
+    const fakePassword = faker.internet.password();
+    fireEvent.input(passwordInput, { target: { value: fakePassword } });
+    expect(validationSpy.fieldName).toEqual('password');
+    expect(validationSpy.fieldValue).toEqual(fakePassword);
   });
 });
