@@ -57,6 +57,8 @@ Projeto de Enquete para Programadores desenvolvido em React durante o curso de R
 * React Router
 * UseState
 * UseContext
+* UseEffect
+* Memo
 * Functional Components
 > ## Features do Typescript Utilizadas
 * POO Avançado
