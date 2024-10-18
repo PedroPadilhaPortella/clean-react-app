@@ -9,7 +9,7 @@ const FormStatus: React.FC = () => {
   return (
     <div data-testid="error-wrap" className={styles.errorWrap}>
       {state.isLoading && <Spinner className={styles.spinner} />}
-      {state.mainError && <span className={styles.error}>{state.mainError}</span>}
+      {state.mainError && <span data-testid="main-error" className={styles.error}>{state.mainError}</span>}
     </div>
   );
 };
