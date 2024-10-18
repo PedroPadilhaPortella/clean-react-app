@@ -1,8 +1,9 @@
-import { AuthenticationSpy, ValidationStub } from '@/presentation/test';
-import { cleanup, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
-import faker from 'faker';
 import React from 'react';
+import faker from 'faker';
+import 'jest-localstorage-mock';
+import { cleanup, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
 import Login from './login';
+import { AuthenticationSpy, ValidationStub } from '@/presentation/test';
 import { InvalidCredentialsError } from '@/domain/errors';
 
 type SutTypes = {
@@ -24,6 +25,10 @@ const createSut = (params?: SutParams): SutTypes => {
 };
 
 describe('Login Component', () => {
+
+  beforeEach(() => {
+    localStorage.clear();
+  });
 
   afterEach(cleanup);
 
@@ -195,5 +200,26 @@ describe('Login Component', () => {
 
     expect(mainError.textContent).toEqual(error.message);
     expect(errorWrap.childElementCount).toBe(1);
+  });
+
+  test('Should add accessToken to localstorage on success', async () => {
+    const { sut, authenticationSpy } = createSut();
+
+    const email = faker.internet.email();
+    const emailInput = sut.getByTestId('email');
+    fireEvent.input(emailInput, { target: { value: email } });
+
+    const password = faker.internet.password();
+    const passwordInput = sut.getByTestId('password');
+    fireEvent.input(passwordInput, { target: { value: password } });
+
+    const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
+    fireEvent.click(submitButton);
+
+    const formElement = sut.getByTestId('form');
+    await waitFor(() => formElement);
+
+    expect(localStorage.setItem)
+      .toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken);
   });
 });
