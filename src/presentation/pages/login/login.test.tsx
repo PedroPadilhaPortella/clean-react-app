@@ -136,4 +136,22 @@ describe('Login Component', () => {
 
     expect(authenticationSpy.params).toEqual({ email, password });
   });
+
+  test('Should call Authentication only once', () => {
+    const { sut, authenticationSpy } = createSut();
+
+    const email = faker.internet.email();
+    const emailInput = sut.getByTestId('email');
+    fireEvent.input(emailInput, { target: { value: email } });
+
+    const password = faker.internet.password();
+    const passwordInput = sut.getByTestId('password');
+    fireEvent.input(passwordInput, { target: { value: password } });
+
+    const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
+    fireEvent.click(submitButton);
+    fireEvent.click(submitButton);
+
+    expect(authenticationSpy.callsCount).toBe(1);
+  });
 });
