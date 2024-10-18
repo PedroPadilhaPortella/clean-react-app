@@ -49,15 +49,18 @@ Projeto de Enquete para Programadores desenvolvido em React durante o curso de R
 * Faker
 * Coveralls
 * React Hooks
+* React Router
 * Husky
 * Lint Staged
 * Eslint
 * Standard Javascript Style
 > ## Features do React Utilizadas
+* React Testing Library
 * React Router
 * UseState
 * UseContext
 * UseEffect
+* UseHistory
 * Memo
 * Functional Components
 > ## Features do Typescript Utilizadas

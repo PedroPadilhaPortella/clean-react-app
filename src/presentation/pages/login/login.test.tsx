@@ -9,7 +9,7 @@ import { AuthenticationSpy, ValidationStub } from '@/presentation/test';
 import { InvalidCredentialsError } from '@/domain/errors';
 import Login from './login';
 
-const history = createMemoryHistory();
+const history = createMemoryHistory({ initialEntries: ['/login'] });
 
 type SutTypes = {
   sut: RenderResult
@@ -211,7 +211,7 @@ describe('Login Component', () => {
     expect(errorWrap.childElementCount).toBe(1);
   });
 
-  test('Should add accessToken to localstorage on success', async () => {
+  test('Should add accessToken to localstorage and navigate to home on success', async () => {
     const { sut, authenticationSpy } = createSut();
 
     const email = faker.internet.email();
@@ -230,9 +230,11 @@ describe('Login Component', () => {
 
     expect(localStorage.setItem)
       .toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken);
+    expect(history.length).toBe(1);
+    expect(history.location.pathname).toBe('/');
   });
 
-  test('Should go to signup page', () => {
+  test('Should navigate to signup page', () => {
     const { sut } = createSut();
 
     const registerLink = sut.getByTestId('signup');
