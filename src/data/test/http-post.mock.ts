@@ -1,4 +1,4 @@
-import { HttpPostParams } from '../protocols';
+import { HttpPostParams } from '@/data/protocols';
 import faker from 'faker';
 
 export const mockPostRequest = (): HttpPostParams<any> => ({

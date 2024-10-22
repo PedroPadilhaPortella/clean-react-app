@@ -1,2 +1,2 @@
-export * from './authentication';
-export * from './authentication.types';
+export { Authentication } from './authentication';
+export { AuthenticationParams } from './authentication.types';

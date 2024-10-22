@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 import { mockAxios, mockHttpResponse } from '@/infra/test';
+import { AxiosHttpClient } from '@/infra/http-client';
 import { mockPostRequest } from '@/data/test';
-import { AxiosHttpClient } from './axios-http-client';
 
 type SutTypes = {
   sut: AxiosHttpClient

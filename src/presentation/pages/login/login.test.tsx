@@ -7,7 +7,7 @@ import { createMemoryHistory } from 'history';
 import { cleanup, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
 import { AuthenticationSpy, ValidationStub } from '@/presentation/test';
 import { InvalidCredentialsError } from '@/domain/errors';
-import Login from './login';
+import { Login } from '@/presentation/pages';
 
 const history = createMemoryHistory({ initialEntries: ['/login'] });
 

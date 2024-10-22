@@ -1,1 +1,1 @@
-export * from './authentication';
+export { RemoteAuthentication } from './authentication/remote-authentication';
