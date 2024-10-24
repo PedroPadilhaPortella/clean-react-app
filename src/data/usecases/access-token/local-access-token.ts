@@ -1,11 +1,11 @@
 import { AccessToken } from '@/domain/usecases/access-token';
-import { SetStorage } from '@/data/protocols/cache/set-storage';
+import { Storage } from '@/data/protocols/cache/storage';
 
 export class LocalAccessToken implements AccessToken {
 
-  constructor(private readonly setStorage: SetStorage) { }
+  constructor(private readonly storage: Storage) { }
 
   async save(accessToken: string): Promise<void> {
-    await this.setStorage.set('accessToken', accessToken);
+    await this.storage.set('accessToken', accessToken);
   }
 }

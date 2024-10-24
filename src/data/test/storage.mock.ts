@@ -1,6 +1,6 @@
-import { SetStorage } from '@/data/protocols';
+import { Storage } from '@/data/protocols';
 
-export class SetStorageMock implements SetStorage {
+export class StorageMock implements Storage {
   key: string;
   value: any;
 
