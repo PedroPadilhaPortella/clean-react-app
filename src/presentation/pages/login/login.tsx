@@ -38,7 +38,7 @@ const Login: React.FC<Props> = ({ validation, authentication, accessToken }: Pro
     event.preventDefault();
 
     try {
-      if (state.isLoading || state.emailError || state.passwordError) return;
+      if (state.isLoading || isThereAnyError()) return;
 
       setState({ ...state, isLoading: true });
       const account = await authentication.auth({ email: state.email, password: state.password });

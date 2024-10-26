@@ -222,4 +222,128 @@ describe('Register Component', () => {
 
     expect(registerAccountSpy.params).toEqual({ name, email, password, passwordConfirmation: password });
   });
+
+  test('Should call RegisterAccount only once', () => {
+    const { sut, registerAccountSpy } = createSut();
+
+    const name = faker.name.firstName();
+    const nameInput = sut.getByTestId('name');
+    fireEvent.input(nameInput, { target: { value: name } });
+
+    const email = faker.internet.email();
+    const emailInput = sut.getByTestId('email');
+    fireEvent.input(emailInput, { target: { value: email } });
+
+    const password = faker.internet.password();
+    const passwordInput = sut.getByTestId('password');
+    fireEvent.input(passwordInput, { target: { value: password } });
+
+    const passwordConfirmInput = sut.getByTestId('passwordConfirm');
+    fireEvent.input(passwordConfirmInput, { target: { value: password } });
+
+    const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
+    fireEvent.click(submitButton);
+    fireEvent.click(submitButton);
+
+    expect(registerAccountSpy.callsCount).toBe(1);
+  });
+
+  test('Should not call RegisterAccount if form is invalid', () => {
+    const validationError = faker.random.words();
+    const { sut, registerAccountSpy } = createSut({ validationError });
+
+    const email = faker.internet.email();
+    const emailInput = sut.getByTestId('email');
+    fireEvent.input(emailInput, { target: { value: email } });
+
+    const formElement = sut.getByTestId('form');
+    fireEvent.submit(formElement);
+
+    expect(registerAccountSpy.callsCount).toBe(0);
+  });
+
+  // test('Should present error if Authentication fails', async () => {
+  //   const error = new InvalidCredentialsError();
+  //   const { sut, authenticationSpy } = createSut();
+
+  //   jest.spyOn(authenticationSpy, 'auth')
+  //     .mockReturnValueOnce(Promise.reject(error));
+
+  //   const email = faker.internet.email();
+  //   const emailInput = sut.getByTestId('email');
+  //   fireEvent.input(emailInput, { target: { value: email } });
+
+  //   const password = faker.internet.password();
+  //   const passwordInput = sut.getByTestId('password');
+  //   fireEvent.input(passwordInput, { target: { value: password } });
+
+  //   const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
+  //   fireEvent.click(submitButton);
+
+  //   const errorWrap = sut.getByTestId('error-wrap');
+  //   await waitFor(() => errorWrap);
+
+  //   const mainError = sut.getByTestId('main-error');
+
+  //   expect(mainError.textContent).toEqual(error.message);
+  //   expect(errorWrap.childElementCount).toBe(1);
+  // });
+
+  // test('Should save AccessToken and navigate to home on success', async () => {
+  //   const { sut, authenticationSpy, accessTokenMock } = createSut();
+
+  //   const email = faker.internet.email();
+  //   const emailInput = sut.getByTestId('email');
+  //   fireEvent.input(emailInput, { target: { value: email } });
+
+  //   const password = faker.internet.password();
+  //   const passwordInput = sut.getByTestId('password');
+  //   fireEvent.input(passwordInput, { target: { value: password } });
+
+  //   const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
+  //   fireEvent.click(submitButton);
+
+  //   const formElement = sut.getByTestId('form');
+  //   await waitFor(() => formElement);
+
+  //   expect(accessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken);
+  //   expect(history.length).toBe(1);
+  //   expect(history.location.pathname).toBe('/');
+  // });
+
+  // test('Should present error if save AccessToken fails', async () => {
+  //   const { sut, accessTokenMock } = createSut();
+  //   const error = new InvalidCredentialsError();
+
+  //   jest.spyOn(accessTokenMock, 'save').mockReturnValueOnce(Promise.reject(error));
+
+  //   const email = faker.internet.email();
+  //   const emailInput = sut.getByTestId('email');
+  //   fireEvent.input(emailInput, { target: { value: email } });
+
+  //   const password = faker.internet.password();
+  //   const passwordInput = sut.getByTestId('password');
+  //   fireEvent.input(passwordInput, { target: { value: password } });
+
+  //   const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
+  //   fireEvent.click(submitButton);
+
+  //   const errorWrap = sut.getByTestId('error-wrap');
+  //   await waitFor(() => errorWrap);
+
+  //   const mainError = sut.getByTestId('main-error');
+
+  //   expect(mainError.textContent).toEqual(error.message);
+  //   expect(errorWrap.childElementCount).toBe(1);
+  // });
+
+  // test('Should navigate to login page', () => {
+  //   const { sut } = createSut();
+
+  //   const loginLink = sut.getByTestId('login');
+  //   fireEvent.click(loginLink);
+
+  //   expect(history.length).toBe(2);
+  //   expect(history.location.pathname).toBe('/login');
+  // });
 });
