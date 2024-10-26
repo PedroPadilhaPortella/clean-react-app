@@ -35,6 +35,11 @@ const Register: React.FC<Props> = ({ validation }: Props) => {
     });
   }, [state.name, state.email, state.password, state.passwordConfirm]);
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    setState({ ...state, isLoading: true });
+  };
+
   const disableButton = (): boolean => {
     return !!state.nameError ||
       !!state.emailError ||
@@ -46,7 +51,7 @@ const Register: React.FC<Props> = ({ validation }: Props) => {
     <div className={styles.register}>
       <Header />
       <Context.Provider value={{ state, setState }}>
-        <form data-testid="form" className={styles.form}>
+        <form data-testid="form" className={styles.form} onSubmit={handleSubmit}>
           <h2>Crie uma conta</h2>
           <Input type="text" name="name" placeholder="Digite seu nome" />
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
