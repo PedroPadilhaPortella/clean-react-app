@@ -4,7 +4,9 @@ import { RegisterParams } from '@/domain/usecases';
 import { RemoteRegister } from '@/data/usecases';
 import { HttpPostClientSpy } from '@/data/test';
 import { AccountModel } from '@/domain/models';
-import { mockRegister } from '@/domain/test';
+import { mockAccountModel, mockRegister } from '@/domain/test';
+import { HttpStatusCode } from '@/data/protocols';
+import { EmailInUseError, UnexpectedError } from '@/domain/errors';
 
 type SutTypes = {
   sut: RemoteRegister
@@ -30,5 +32,34 @@ describe('RemoteRegister', () => {
     const registerParams = mockRegister();
     await sut.register(registerParams);
     expect(httpPostClientSpy.body).toEqual(registerParams);
+  });
+
+  test('Should throw EmailInUseError when HttpPostClient returns 403', async () => {
+    const { sut, httpPostClientSpy } = createSut();
+    httpPostClientSpy.response = { statusCode: HttpStatusCode.FORBIDDEN };
+    const promise = sut.register(mockRegister());
+    await expect(promise).rejects.toThrow(new EmailInUseError());
+  });
+
+  test('Should throw UnexpectedError if HttpPostClient returns 404', async () => {
+    const { sut, httpPostClientSpy } = createSut();
+    httpPostClientSpy.response = { statusCode: HttpStatusCode.BAD_REQUEST };
+    const promise = sut.register(mockRegister());
+    await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
+
+  test('Should throw UnexpectedError if HttpPostClient returns 500', async () => {
+    const { sut, httpPostClientSpy } = createSut();
+    httpPostClientSpy.response = { statusCode: HttpStatusCode.SERVER_ERROR };
+    const promise = sut.register(mockRegister());
+    await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
+
+  test('Should return an AccountModel when HttpPostClient returns 200', async () => {
+    const { sut, httpPostClientSpy } = createSut();
+    const mockResponse = mockAccountModel();
+    httpPostClientSpy.response = { statusCode: HttpStatusCode.OK, body: mockResponse };
+    const response = await sut.register(mockRegister());
+    expect(response).toEqual(mockResponse);
   });
 });

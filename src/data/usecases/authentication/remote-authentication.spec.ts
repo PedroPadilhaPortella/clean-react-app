@@ -70,6 +70,6 @@ describe('RemoteAuthentication', () => {
     const mockResponse = mockAccountModel();
     httpPostClientSpy.response = { statusCode: HttpStatusCode.OK, body: mockResponse };
     const response = await sut.auth(mockAuthentication());
-    await expect(response).toEqual(mockResponse);
+    expect(response).toEqual(mockResponse);
   });
 });
