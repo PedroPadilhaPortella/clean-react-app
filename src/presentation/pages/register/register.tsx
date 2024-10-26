@@ -41,15 +41,19 @@ const Register: React.FC<Props> = ({ validation, registerAccount }: Props) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
-    if (state.isLoading || isThereAnyError()) return;
+    try {
+      if (state.isLoading || isThereAnyError()) return;
 
-    setState({ ...state, isLoading: true });
-    await registerAccount.register({
-      name: state.name,
-      email: state.email,
-      password: state.password,
-      passwordConfirmation: state.passwordConfirm
-    });
+      setState({ ...state, isLoading: true });
+      await registerAccount.register({
+        name: state.name,
+        email: state.email,
+        password: state.password,
+        passwordConfirmation: state.passwordConfirm
+      });
+    } catch (error) {
+      setState({ ...state, isLoading: false, mainError: error.message });
+    }
   };
 
   const isThereAnyError = (): boolean => {
