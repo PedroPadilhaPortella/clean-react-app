@@ -262,13 +262,13 @@ describe('Login Component', () => {
     expect(errorWrap.childElementCount).toBe(1);
   });
 
-  test('Should navigate to signup page', () => {
+  test('Should navigate to register page', () => {
     const { sut } = createSut();
 
-    const registerLink = sut.getByTestId('signup');
+    const registerLink = sut.getByTestId('register');
     fireEvent.click(registerLink);
 
     expect(history.length).toBe(2);
-    expect(history.location.pathname).toBe('/signup');
+    expect(history.location.pathname).toBe('/register');
   });
 });
