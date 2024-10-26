@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Register as RegisterAccount } from '@/domain/usecases';
+import { RegisterAccount } from '@/domain/usecases';
 import { Footer, FormStatus, Header, Input } from '@/presentation/components';
 import Context from '@/presentation/contexts/form/form.context';
 import { Validation } from '@/presentation/protocols/validation';

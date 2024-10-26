@@ -1,13 +1,13 @@
 import { AccountModel } from '@/domain/models';
 import { mockAccountModel } from '@/domain/test';
-import { Register as RegisterAccount, RegisterParams } from '@/domain/usecases';
+import { RegisterAccount, RegisterAccountParams } from '@/domain/usecases';
 
 export class RegisterAccountSpy implements RegisterAccount {
   account = mockAccountModel();
-  params: RegisterParams;
+  params: RegisterAccountParams;
   callsCount = 0;
 
-  async register(params: RegisterParams): Promise<AccountModel> {
+  async register(params: RegisterAccountParams): Promise<AccountModel> {
     this.params = params;
     this.callsCount++;
     return Promise.resolve(this.account);

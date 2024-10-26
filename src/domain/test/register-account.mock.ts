@@ -1,8 +1,8 @@
 import faker from 'faker';
 
-import { RegisterParams } from '@/domain/usecases';
+import { RegisterAccountParams } from '@/domain/usecases';
 
-export const mockRegister = (): RegisterParams => {
+export const mockRegister = (): RegisterAccountParams => {
   const password = faker.internet.password();
 
   return {

@@ -1,7 +1,7 @@
 import faker from 'faker';
 
-import { RegisterParams } from '@/domain/usecases';
-import { RemoteRegister } from '@/data/usecases';
+import { RegisterAccountParams } from '@/domain/usecases';
+import { RemoteRegisterAccount } from '@/data/usecases';
 import { HttpPostClientSpy } from '@/data/test';
 import { AccountModel } from '@/domain/models';
 import { mockAccountModel, mockRegister } from '@/domain/test';
@@ -9,17 +9,17 @@ import { HttpStatusCode } from '@/data/protocols';
 import { EmailInUseError, UnexpectedError } from '@/domain/errors';
 
 type SutTypes = {
-  sut: RemoteRegister
-  httpPostClientSpy: HttpPostClientSpy<RegisterParams, AccountModel>
+  sut: RemoteRegisterAccount
+  httpPostClientSpy: HttpPostClientSpy<RegisterAccountParams, AccountModel>
 };
 
 const createSut = (url: string = faker.internet.url()): SutTypes => {
-  const httpPostClientSpy = new HttpPostClientSpy<RegisterParams, AccountModel>();
-  const sut = new RemoteRegister(url, httpPostClientSpy);
+  const httpPostClientSpy = new HttpPostClientSpy<RegisterAccountParams, AccountModel>();
+  const sut = new RemoteRegisterAccount(url, httpPostClientSpy);
   return { sut, httpPostClientSpy };
 };
 
-describe('RemoteRegister', () => {
+describe('RemoteRegisterAccount', () => {
   test('Should call HttpPostClient with correct URL', async () => {
     const url = 'http://localhost:5000/api/login';
     const { sut, httpPostClientSpy } = createSut(url);
