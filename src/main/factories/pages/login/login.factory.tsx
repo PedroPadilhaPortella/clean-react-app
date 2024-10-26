@@ -1,10 +1,18 @@
 import React from 'react';
-import { Login } from '@/presentation/pages';
-import { remoteAuthenticationFactory } from '../../usecases/authentication/remote-authentication.factory';
+
+import { remoteAuthenticationFactory, localAccessTokenFactory } from '@/main/factories/usecases';
 import { loginValidationFactory } from './login-validation.factory';
+import { Login } from '@/presentation/pages';
 
 export const loginFactory: React.FC = () => {
   const remoteAuthentication = remoteAuthenticationFactory();
   const loginValidation = loginValidationFactory();
-  return (<Login authentication={remoteAuthentication} validation={loginValidation} />);
+  const accessToken = localAccessTokenFactory();
+  return (
+    <Login
+      authentication={remoteAuthentication}
+      validation={loginValidation}
+      accessToken={accessToken}
+    />
+  );
 };
