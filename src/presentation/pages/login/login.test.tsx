@@ -59,7 +59,7 @@ describe('Login Component', () => {
     expect(emailStatus.textContent).toBe('🔴');
 
     const passwordStatus = sut.getByTestId('password-status');
-    expect(emailStatus.title).toBe(validationStub.errorMessage);
+    expect(passwordStatus.title).toBe(validationStub.errorMessage);
     expect(passwordStatus.textContent).toBe('🔴');
   });
 
