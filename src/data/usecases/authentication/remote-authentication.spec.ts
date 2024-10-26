@@ -1,7 +1,7 @@
 import faker from 'faker';
 
 import { InvalidCredentialsError } from '@/domain/errors/InvalidCredentialsError';
-import { mockAccountModel, mockAuthentication } from '@/domain/test/account.mock';
+import { mockAccountModel, mockAuthentication } from '@/domain/test';
 import { UnexpectedError } from '@/domain/errors/UnexpectedError';
 import { AccountModel } from '@/domain/models/account.model';
 import { AuthenticationParams } from '@/domain/usecases';

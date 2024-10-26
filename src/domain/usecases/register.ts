@@ -7,5 +7,5 @@ export type RegisterParams = {
   passwordConfirmation: string
 };
 export interface Register {
-  add: (params: RegisterParams) => Promise<AccountModel>
+  register: (params: RegisterParams) => Promise<AccountModel>
 }
