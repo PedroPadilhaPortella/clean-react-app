@@ -50,7 +50,7 @@ const Login: React.FC<Props> = ({ validation, authentication, accessToken }: Pro
 
   };
 
-  const disableButton = (): boolean => {
+  const isThereAnyError = (): boolean => {
     return !!state.emailError || !!state.passwordError;
   };
 
@@ -62,7 +62,7 @@ const Login: React.FC<Props> = ({ validation, authentication, accessToken }: Pro
           <h2>Login</h2>
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" placeholder="Digite sua senha" />
-          <button className={styles.submit} disabled={disableButton()} type="submit" data-testid="submit" >
+          <button className={styles.submit} disabled={isThereAnyError()} type="submit" data-testid="submit" >
             Entrar
           </button>
           <Link data-testid="register" to="/register" className={styles.link}>Criar conta</Link>

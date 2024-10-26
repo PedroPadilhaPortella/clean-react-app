@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { Register as RegisterAccount } from '@/domain/usecases';
 import { Footer, FormStatus, Header, Input } from '@/presentation/components';
 import Context from '@/presentation/contexts/form/form.context';
+import { Validation } from '@/presentation/protocols/validation';
 
 import styles from './register.module.scss';
-import { Validation } from '@/presentation/protocols/validation';
 
 type Props = {
   validation: Validation
+  registerAccount: RegisterAccount
 };
 
-const Register: React.FC<Props> = ({ validation }: Props) => {
+const Register: React.FC<Props> = ({ validation, registerAccount }: Props) => {
+
   const [state, setState] = useState({
     isLoading: false,
     name: '',
@@ -35,12 +38,19 @@ const Register: React.FC<Props> = ({ validation }: Props) => {
     });
   }, [state.name, state.email, state.password, state.passwordConfirm]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
+
     setState({ ...state, isLoading: true });
+    await registerAccount.register({
+      name: state.name,
+      email: state.email,
+      password: state.password,
+      passwordConfirmation: state.passwordConfirm
+    });
   };
 
-  const disableButton = (): boolean => {
+  const isThereAnyError = (): boolean => {
     return !!state.nameError ||
       !!state.emailError ||
       !!state.passwordError ||
@@ -57,7 +67,7 @@ const Register: React.FC<Props> = ({ validation }: Props) => {
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" placeholder="Digite sua senha" />
           <Input type="password" name="passwordConfirm" placeholder="Confirme a sua senha" />
-          <button className={styles.submit} disabled={disableButton()} type="submit" data-testid="submit" >
+          <button className={styles.submit} disabled={isThereAnyError()} type="submit" data-testid="submit" >
             Criar conta
           </button>
           <Link data-testid="login" to="/login" className={styles.link}>Já tem uma conta? Faça Login</Link>

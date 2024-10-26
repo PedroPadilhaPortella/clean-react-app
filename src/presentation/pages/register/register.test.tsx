@@ -1,52 +1,38 @@
-import React from 'react';
-import faker from 'faker';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
 import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react';
+import faker from 'faker';
+import { createMemoryHistory } from 'history';
+import React from 'react';
+import { Router } from 'react-router-dom';
 
-import { ValidationStub } from '@/presentation/test';
 import { Register } from '@/presentation/pages';
+import { RegisterAccountSpy, ValidationStub } from '@/presentation/test';
 
 const history = createMemoryHistory({ initialEntries: ['/login'] });
 
 type SutTypes = {
   sut: RenderResult
+  registerAccountSpy: RegisterAccountSpy
 };
 
 type SutParams = {
   validationError: string
 };
 
-// const createSut = (params?: SutParams): SutTypes => {
-//   const validationStub = new ValidationStub();
-//   const accessTokenMock = new AccessTokenMock();
-//   const authenticationSpy = new AuthenticationSpy();
-//   validationStub.errorMessage = params?.validationError;
-
-//   const sut = render(
-//     <Router history={history}>
-//       <Login
-//         validation={validationStub}
-//         authentication={authenticationSpy}
-//         accessToken={accessTokenMock}
-//       />
-//     </Router>
-//   );
-
-//   return { sut, validationStub, authenticationSpy, accessTokenMock };
-// };
-
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
+  const registerAccountSpy = new RegisterAccountSpy();
   validationStub.errorMessage = params?.validationError;
 
   const sut = render(
     <Router history={history}>
-      <Register validation={validationStub} />
+      <Register
+        validation={validationStub}
+        registerAccount={registerAccountSpy}
+      />
     </Router>
   );
 
-  return { sut };
+  return { sut, registerAccountSpy };
 };
 
 describe('Register Component', () => {
@@ -211,5 +197,29 @@ describe('Register Component', () => {
 
     const spinner = sut.getByTestId('spinner');
     expect(spinner).toBeTruthy();
+  });
+
+  test('Should call RegisterAccount with correct values', () => {
+    const { sut, registerAccountSpy } = createSut();
+
+    const name = faker.name.firstName();
+    const nameInput = sut.getByTestId('name');
+    fireEvent.input(nameInput, { target: { value: name } });
+
+    const email = faker.internet.email();
+    const emailInput = sut.getByTestId('email');
+    fireEvent.input(emailInput, { target: { value: email } });
+
+    const password = faker.internet.password();
+    const passwordInput = sut.getByTestId('password');
+    fireEvent.input(passwordInput, { target: { value: password } });
+
+    const passwordConfirmInput = sut.getByTestId('passwordConfirm');
+    fireEvent.input(passwordConfirmInput, { target: { value: password } });
+
+    const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
+    fireEvent.click(submitButton);
+
+    expect(registerAccountSpy.params).toEqual({ name, email, password, passwordConfirmation: password });
   });
 });
