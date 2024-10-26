@@ -1,3 +1,2 @@
-export { Authentication } from './authentication';
-export { AuthenticationParams } from './authentication.types';
+export { Authentication, AuthenticationParams } from './authentication';
 export { AccessToken } from './access-token';

@@ -2,9 +2,9 @@ import faker from 'faker';
 
 import { InvalidCredentialsError } from '@/domain/errors/InvalidCredentialsError';
 import { mockAccountModel, mockAuthentication } from '@/domain/test/account.mock';
-import { AuthenticationParams } from '@/domain/usecases/authentication.types';
 import { UnexpectedError } from '@/domain/errors/UnexpectedError';
 import { AccountModel } from '@/domain/models/account.model';
+import { AuthenticationParams } from '@/domain/usecases';
 
 import { RemoteAuthentication } from '@/data/usecases';
 import { HttpStatusCode } from '@/data/protocols';
