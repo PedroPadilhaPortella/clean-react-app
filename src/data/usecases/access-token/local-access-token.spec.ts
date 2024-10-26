@@ -1,7 +1,7 @@
 import faker from 'faker';
 
 import { LocalAccessToken } from './local-access-token';
-import { StorageMock } from '@/data/test/storage.mock';
+import { StorageMock } from '@/data/test';
 
 type SutTypes = {
   storageMock: StorageMock
