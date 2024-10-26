@@ -171,4 +171,23 @@ describe('Register Component', () => {
     expect(passwordConfirmStatus.title).toBe('Tudo certo!');
     expect(passwordConfirmStatus.textContent).toBe('🟢');
   });
+
+  test('Should enable submit button when form is valid', () => {
+    const { sut } = createSut();
+
+    const nameInput = sut.getByTestId('name');
+    fireEvent.input(nameInput, { target: { value: faker.name.firstName() } });
+
+    const emailInput = sut.getByTestId('email');
+    fireEvent.input(emailInput, { target: { value: faker.internet.email() } });
+
+    const passwordInput = sut.getByTestId('password');
+    fireEvent.input(passwordInput, { target: { value: faker.internet.password() } });
+
+    const passwordConfirmInput = sut.getByTestId('passwordConfirm');
+    fireEvent.input(passwordConfirmInput, { target: { value: faker.internet.password() } });
+
+    const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
+    expect(submitButton.disabled).toBe(false);
+  });
 });

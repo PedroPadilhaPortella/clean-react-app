@@ -35,6 +35,13 @@ const Register: React.FC<Props> = ({ validation }: Props) => {
     });
   }, [state.name, state.email, state.password, state.passwordConfirm]);
 
+  const disableButton = (): boolean => {
+    return !!state.nameError ||
+      !!state.emailError ||
+      !!state.passwordError ||
+      !!state.passwordConfirmError;
+  };
+
   return (
     <div className={styles.register}>
       <Header />
@@ -45,7 +52,7 @@ const Register: React.FC<Props> = ({ validation }: Props) => {
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" placeholder="Digite sua senha" />
           <Input type="password" name="passwordConfirm" placeholder="Confirme a sua senha" />
-          <button className={styles.submit} disabled={true} type="submit" data-testid="submit" >
+          <button className={styles.submit} disabled={disableButton()} type="submit" data-testid="submit" >
             Criar conta
           </button>
           <Link data-testid="login" to="/login" className={styles.link}>Já tem uma conta? Faça Login</Link>
