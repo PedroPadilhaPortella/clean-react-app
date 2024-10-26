@@ -47,7 +47,6 @@ const Login: React.FC<Props> = ({ validation, authentication, accessToken }: Pro
     } catch (error) {
       setState({ ...state, isLoading: false, mainError: error.message });
     }
-
   };
 
   const isThereAnyError = (): boolean => {

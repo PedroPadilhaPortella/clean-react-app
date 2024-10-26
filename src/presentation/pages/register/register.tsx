@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
-import { RegisterAccount } from '@/domain/usecases';
+import { AccessToken, RegisterAccount } from '@/domain/usecases';
 import { Footer, FormStatus, Header, Input } from '@/presentation/components';
 import Context from '@/presentation/contexts/form/form.context';
 import { Validation } from '@/presentation/protocols/validation';
@@ -11,9 +11,11 @@ import styles from './register.module.scss';
 type Props = {
   validation: Validation
   registerAccount: RegisterAccount
+  accessToken: AccessToken
 };
 
-const Register: React.FC<Props> = ({ validation, registerAccount }: Props) => {
+const Register: React.FC<Props> = ({ validation, registerAccount, accessToken }: Props) => {
+  const history = useHistory();
 
   const [state, setState] = useState({
     isLoading: false,
@@ -45,12 +47,14 @@ const Register: React.FC<Props> = ({ validation, registerAccount }: Props) => {
       if (state.isLoading || isThereAnyError()) return;
 
       setState({ ...state, isLoading: true });
-      await registerAccount.register({
+      const response = await registerAccount.register({
         name: state.name,
         email: state.email,
         password: state.password,
         passwordConfirmation: state.passwordConfirm
       });
+      await accessToken.save(response.accessToken);
+      history.replace('/');
     } catch (error) {
       setState({ ...state, isLoading: false, mainError: error.message });
     }
@@ -76,7 +80,7 @@ const Register: React.FC<Props> = ({ validation, registerAccount }: Props) => {
           <button className={styles.submit} disabled={isThereAnyError()} type="submit" data-testid="submit" >
             Criar conta
           </button>
-          <Link data-testid="login" to="/login" className={styles.link}>Já tem uma conta? Faça Login</Link>
+          <Link data-testid="login" replace to="/login" className={styles.link}>Já tem uma conta? Faça Login</Link>
           <FormStatus />
         </form>
       </Context.Provider>

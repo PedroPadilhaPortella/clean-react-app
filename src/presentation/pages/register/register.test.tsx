@@ -5,13 +5,14 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 
 import { Register } from '@/presentation/pages';
-import { RegisterAccountSpy, ValidationStub } from '@/presentation/test';
+import { AccessTokenMock, RegisterAccountSpy, ValidationStub } from '@/presentation/test';
 import { InvalidCredentialsError } from '@/domain/errors';
 
 const history = createMemoryHistory({ initialEntries: ['/register'] });
 
 type SutTypes = {
   sut: RenderResult
+  accessTokenMock: AccessTokenMock
   registerAccountSpy: RegisterAccountSpy
 };
 
@@ -21,6 +22,7 @@ type SutParams = {
 
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
+  const accessTokenMock = new AccessTokenMock();
   const registerAccountSpy = new RegisterAccountSpy();
   validationStub.errorMessage = params?.validationError;
 
@@ -29,11 +31,12 @@ const createSut = (params?: SutParams): SutTypes => {
       <Register
         validation={validationStub}
         registerAccount={registerAccountSpy}
+        accessToken={accessTokenMock}
       />
     </Router>
   );
 
-  return { sut, registerAccountSpy };
+  return { sut, registerAccountSpy, accessTokenMock };
 };
 
 describe('Register Component', () => {
@@ -296,53 +299,67 @@ describe('Register Component', () => {
     expect(errorWrap.childElementCount).toBe(1);
   });
 
-  // test('Should save AccessToken and navigate to home on success', async () => {
-  //   const { sut, authenticationSpy, accessTokenMock } = createSut();
+  test('Should save AccessToken and navigate to home on success', async () => {
+    const { sut, registerAccountSpy, accessTokenMock } = createSut();
 
-  //   const email = faker.internet.email();
-  //   const emailInput = sut.getByTestId('email');
-  //   fireEvent.input(emailInput, { target: { value: email } });
+    const name = faker.name.firstName();
+    const nameInput = sut.getByTestId('name');
+    fireEvent.input(nameInput, { target: { value: name } });
 
-  //   const password = faker.internet.password();
-  //   const passwordInput = sut.getByTestId('password');
-  //   fireEvent.input(passwordInput, { target: { value: password } });
+    const email = faker.internet.email();
+    const emailInput = sut.getByTestId('email');
+    fireEvent.input(emailInput, { target: { value: email } });
 
-  //   const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
-  //   fireEvent.click(submitButton);
+    const password = faker.internet.password();
+    const passwordInput = sut.getByTestId('password');
+    fireEvent.input(passwordInput, { target: { value: password } });
 
-  //   const formElement = sut.getByTestId('form');
-  //   await waitFor(() => formElement);
+    const passwordConfirmInput = sut.getByTestId('passwordConfirm');
+    fireEvent.input(passwordConfirmInput, { target: { value: password } });
 
-  //   expect(accessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken);
-  //   expect(history.length).toBe(1);
-  //   expect(history.location.pathname).toBe('/');
-  // });
+    const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
+    fireEvent.click(submitButton);
 
-  // test('Should present error if save AccessToken fails', async () => {
-  //   const { sut, accessTokenMock } = createSut();
-  //   const error = new InvalidCredentialsError();
+    const formElement = sut.getByTestId('form');
+    await waitFor(() => formElement);
 
-  //   jest.spyOn(accessTokenMock, 'save').mockReturnValueOnce(Promise.reject(error));
+    expect(accessTokenMock.accessToken).toBe(registerAccountSpy.account.accessToken);
+    expect(history.length).toBe(1);
+    expect(history.location.pathname).toBe('/');
+  });
 
-  //   const email = faker.internet.email();
-  //   const emailInput = sut.getByTestId('email');
-  //   fireEvent.input(emailInput, { target: { value: email } });
+  test('Should present error if save AccessToken fails', async () => {
+    const { sut, accessTokenMock } = createSut();
+    const error = new InvalidCredentialsError();
 
-  //   const password = faker.internet.password();
-  //   const passwordInput = sut.getByTestId('password');
-  //   fireEvent.input(passwordInput, { target: { value: password } });
+    jest.spyOn(accessTokenMock, 'save').mockReturnValueOnce(Promise.reject(error));
 
-  //   const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
-  //   fireEvent.click(submitButton);
+    const name = faker.name.firstName();
+    const nameInput = sut.getByTestId('name');
+    fireEvent.input(nameInput, { target: { value: name } });
 
-  //   const errorWrap = sut.getByTestId('error-wrap');
-  //   await waitFor(() => errorWrap);
+    const email = faker.internet.email();
+    const emailInput = sut.getByTestId('email');
+    fireEvent.input(emailInput, { target: { value: email } });
 
-  //   const mainError = sut.getByTestId('main-error');
+    const password = faker.internet.password();
+    const passwordInput = sut.getByTestId('password');
+    fireEvent.input(passwordInput, { target: { value: password } });
 
-  //   expect(mainError.textContent).toEqual(error.message);
-  //   expect(errorWrap.childElementCount).toBe(1);
-  // });
+    const passwordConfirmInput = sut.getByTestId('passwordConfirm');
+    fireEvent.input(passwordConfirmInput, { target: { value: password } });
+
+    const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
+    fireEvent.click(submitButton);
+
+    const errorWrap = sut.getByTestId('error-wrap');
+    await waitFor(() => errorWrap);
+
+    const mainError = sut.getByTestId('main-error');
+
+    expect(mainError.textContent).toEqual(error.message);
+    expect(errorWrap.childElementCount).toBe(1);
+  });
 
   test('Should navigate to login page', () => {
     const { sut } = createSut();
@@ -350,7 +367,7 @@ describe('Register Component', () => {
     const loginLink = sut.getByTestId('login');
     fireEvent.click(loginLink);
 
-    expect(history.length).toBe(2);
+    expect(history.length).toBe(1);
     expect(history.location.pathname).toBe('/login');
   });
 });
