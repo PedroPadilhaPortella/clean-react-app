@@ -32,10 +32,13 @@ const Register: React.FC<Props> = ({ validation, registerAccount, accessToken }:
   });
 
   useEffect(() => {
-    const nameError = validation.validate('name', state.name);
-    const emailError = validation.validate('email', state.email);
-    const passwordError = validation.validate('password', state.password);
-    const passwordConfirmError = validation.validate('passwordConfirm', state.passwordConfirm);
+    const { name, email, password, passwordConfirm } = state;
+    const formData = { name, email, password, passwordConfirm };
+
+    const nameError = validation.validate('name', formData);
+    const emailError = validation.validate('email', formData);
+    const passwordError = validation.validate('password', formData);
+    const passwordConfirmError = validation.validate('passwordConfirm', formData);
 
     setState({
       ...state,
