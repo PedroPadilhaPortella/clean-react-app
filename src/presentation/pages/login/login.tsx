@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { Footer, Header, Input, FormStatus } from '@/presentation/components';
+import { Footer, Header, Input, FormStatus, SubmitButton } from '@/presentation/components';
 import { Validation } from '@/presentation/protocols/validation';
 import Context from '@/presentation/contexts/form/form.context';
 import { Authentication, AccessToken } from '@/domain/usecases';
@@ -19,6 +19,7 @@ const Login: React.FC<Props> = ({ validation, authentication, accessToken }: Pro
 
   const [state, setState] = useState({
     isLoading: false,
+    isFormInvalid: true,
     email: '',
     password: '',
     emailError: '',
@@ -27,10 +28,14 @@ const Login: React.FC<Props> = ({ validation, authentication, accessToken }: Pro
   });
 
   useEffect(() => {
+    const emailError = validation.validate('email', state.email);
+    const passwordError = validation.validate('password', state.password);
+
     setState({
       ...state,
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password)
+      emailError,
+      passwordError,
+      isFormInvalid: !!emailError || !!passwordError
     });
   }, [state.email, state.password]);
 
@@ -38,7 +43,7 @@ const Login: React.FC<Props> = ({ validation, authentication, accessToken }: Pro
     event.preventDefault();
 
     try {
-      if (state.isLoading || isThereAnyError()) return;
+      if (state.isLoading || state.isFormInvalid) return;
 
       setState({ ...state, isLoading: true });
       const account = await authentication.auth({ email: state.email, password: state.password });
@@ -49,10 +54,6 @@ const Login: React.FC<Props> = ({ validation, authentication, accessToken }: Pro
     }
   };
 
-  const isThereAnyError = (): boolean => {
-    return !!state.emailError || !!state.passwordError;
-  };
-
   return (
     <div className={styles.login}>
       <Header />
@@ -61,9 +62,7 @@ const Login: React.FC<Props> = ({ validation, authentication, accessToken }: Pro
           <h2>Login</h2>
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" placeholder="Digite sua senha" />
-          <button className={styles.submit} disabled={isThereAnyError()} type="submit" data-testid="submit" >
-            Entrar
-          </button>
+          <SubmitButton text="Entrar" />
           <Link data-testid="register" to="/register" className={styles.link}>Criar conta</Link>
           <FormStatus />
         </form>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { AccessToken, RegisterAccount } from '@/domain/usecases';
-import { Footer, FormStatus, Header, Input } from '@/presentation/components';
+import { Footer, FormStatus, Header, Input, SubmitButton } from '@/presentation/components';
 import Context from '@/presentation/contexts/form/form.context';
 import { Validation } from '@/presentation/protocols/validation';
 
@@ -19,6 +19,7 @@ const Register: React.FC<Props> = ({ validation, registerAccount, accessToken }:
 
   const [state, setState] = useState({
     isLoading: false,
+    isFormInvalid: true,
     name: '',
     email: '',
     password: '',
@@ -31,12 +32,18 @@ const Register: React.FC<Props> = ({ validation, registerAccount, accessToken }:
   });
 
   useEffect(() => {
+    const nameError = validation.validate('name', state.name);
+    const emailError = validation.validate('email', state.email);
+    const passwordError = validation.validate('password', state.password);
+    const passwordConfirmError = validation.validate('passwordConfirm', state.passwordConfirm);
+
     setState({
       ...state,
-      nameError: validation.validate('name', state.name),
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password),
-      passwordConfirmError: validation.validate('passwordConfirm', state.passwordConfirm)
+      nameError,
+      emailError,
+      passwordError,
+      passwordConfirmError,
+      isFormInvalid: !!nameError || !!emailError || !!passwordError || !!passwordConfirmError
     });
   }, [state.name, state.email, state.password, state.passwordConfirm]);
 
@@ -44,7 +51,7 @@ const Register: React.FC<Props> = ({ validation, registerAccount, accessToken }:
     event.preventDefault();
 
     try {
-      if (state.isLoading || isThereAnyError()) return;
+      if (state.isLoading || state.isFormInvalid) return;
 
       setState({ ...state, isLoading: true });
       const response = await registerAccount.register({
@@ -60,13 +67,6 @@ const Register: React.FC<Props> = ({ validation, registerAccount, accessToken }:
     }
   };
 
-  const isThereAnyError = (): boolean => {
-    return !!state.nameError ||
-      !!state.emailError ||
-      !!state.passwordError ||
-      !!state.passwordConfirmError;
-  };
-
   return (
     <div className={styles.register}>
       <Header />
@@ -77,10 +77,10 @@ const Register: React.FC<Props> = ({ validation, registerAccount, accessToken }:
           <Input type="email" name="email" placeholder="Digite seu e-mail" />
           <Input type="password" name="password" placeholder="Digite sua senha" />
           <Input type="password" name="passwordConfirm" placeholder="Confirme a sua senha" />
-          <button className={styles.submit} disabled={isThereAnyError()} type="submit" data-testid="submit" >
-            Criar conta
-          </button>
-          <Link data-testid="login" replace to="/login" className={styles.link}>Já tem uma conta? Faça Login</Link>
+          <SubmitButton text="Criar conta" />
+          <Link data-testid="login" replace to="/login" className={styles.link}>
+            Já tem uma conta? Faça Login
+          </Link>
           <FormStatus />
         </form>
       </Context.Provider>

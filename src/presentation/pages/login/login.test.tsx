@@ -51,9 +51,6 @@ describe('Login Component', () => {
     const errorWrap = sut.getByTestId('error-wrap');
     expect(errorWrap.childElementCount).toBe(0);
 
-    const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
-    expect(submitButton.disabled).toBe(true);
-
     const emailStatus = sut.getByTestId('email-status');
     expect(emailStatus.title).toBe(validationStub.errorMessage);
     expect(emailStatus.textContent).toBe('🔴');
@@ -61,6 +58,9 @@ describe('Login Component', () => {
     const passwordStatus = sut.getByTestId('password-status');
     expect(passwordStatus.title).toBe(validationStub.errorMessage);
     expect(passwordStatus.textContent).toBe('🔴');
+
+    const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
+    expect(submitButton.disabled).toBe(true);
   });
 
   test('Should show email error if Validation fails', () => {
