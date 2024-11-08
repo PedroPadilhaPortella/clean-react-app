@@ -68,16 +68,16 @@ describe('Login', () => {
   });
 
   it('Should present save accessToken when valid credentials are provided', () => {
-    cy.getByTestId('email').type(faker.internet.email());
-    cy.getByTestId('password').type(faker.random.alphaNumeric(6));
+    cy.getByTestId('email').type('pedro@gmail.com');
+    cy.getByTestId('password').type('pedro123');
     cy.getByTestId('submit').click();
 
     cy.getByTestId('error-wrap')
       .getByTestId('spinner').should('exist')
       .getByTestId('main-error').should('not.exist')
-      .getByTestId('spinner').should('not.exist')
-      .getByTestId('main-error').should('contain.text', 'Credenciais inválidas');
+      .getByTestId('spinner').should('not.exist');
 
-    cy.url().should('eq', `${baseUrl}/login`);
+    cy.url().should('eq', `${baseUrl}/`);
+    cy.window().then(window => assert.ok(window.localStorage.getItem('accessToken')));
   });
 });
