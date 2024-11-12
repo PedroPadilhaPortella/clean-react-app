@@ -79,8 +79,8 @@ describe('Login', () => {
       response: { error: faker.random.words() }
     });
 
-    cy.getByTestId('email').type('pedro@gmail.com');
-    cy.getByTestId('password').type('pedro123');
+    cy.getByTestId('email').type(faker.internet.email());
+    cy.getByTestId('password').type(faker.random.alphaNumeric(6));
     cy.getByTestId('submit').click();
 
     cy.getByTestId('main-error')
@@ -97,8 +97,8 @@ describe('Login', () => {
       response: { invalidProperty: faker.random.words() }
     });
 
-    cy.getByTestId('email').type('pedro@gmail.com');
-    cy.getByTestId('password').type('pedro123');
+    cy.getByTestId('email').type(faker.internet.email());
+    cy.getByTestId('password').type(faker.random.alphaNumeric(6));
     cy.getByTestId('submit').click();
 
     cy.getByTestId('main-error')
@@ -115,8 +115,26 @@ describe('Login', () => {
       response: { accessToken: faker.random.uuid() }
     });
 
-    cy.getByTestId('email').type('pedro@gmail.com');
-    cy.getByTestId('password').type('pedro123');
+    cy.getByTestId('email').type(faker.internet.email());
+    cy.getByTestId('password').type(faker.random.alphaNumeric(6));
+    cy.getByTestId('submit').click();
+
+    cy.getByTestId('main-error').should('not.exist');
+    cy.getByTestId('spinner').should('not.exist');
+    cy.url().should('eq', `${baseUrl}/`);
+    cy.window().then(window => assert.ok(window.localStorage.getItem('accessToken')));
+  });
+
+  it('Should prevent multiple submits', () => {
+    cy.route({
+      method: 'POST',
+      url: /login/,
+      status: 200,
+      response: { accessToken: faker.random.uuid() }
+    });
+
+    cy.getByTestId('email').type(faker.internet.email());
+    cy.getByTestId('password').type(faker.random.alphaNumeric(6));
     cy.getByTestId('submit').click();
 
     cy.getByTestId('main-error').should('not.exist');
