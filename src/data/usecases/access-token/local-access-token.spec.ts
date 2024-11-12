@@ -2,6 +2,7 @@ import faker from 'faker';
 
 import { LocalAccessToken } from './local-access-token';
 import { StorageMock } from '@/data/test';
+import { UnexpectedError } from '@/domain/errors';
 
 type SutTypes = {
   storageMock: StorageMock
@@ -30,5 +31,11 @@ describe('LocalAccessToken', () => {
     jest.spyOn(storageMock, 'set').mockRejectedValueOnce(new Error());
     const promise = sut.save(faker.random.uuid());
     await expect(promise).rejects.toThrow(new Error());
+  });
+
+  test('Should throw when accessToken is not defined', async () => {
+    const { sut } = createSut();
+    const promise = sut.save(undefined);
+    await expect(promise).rejects.toThrow(new UnexpectedError());
   });
 });
