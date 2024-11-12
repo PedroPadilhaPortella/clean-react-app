@@ -131,15 +131,12 @@ describe('Login', () => {
       url: /login/,
       status: 200,
       response: { accessToken: faker.random.uuid() }
-    });
+    }).as('request');
 
     cy.getByTestId('email').type(faker.internet.email());
     cy.getByTestId('password').type(faker.random.alphaNumeric(6));
-    cy.getByTestId('submit').click();
+    cy.getByTestId('submit').dblclick();
 
-    cy.getByTestId('main-error').should('not.exist');
-    cy.getByTestId('spinner').should('not.exist');
-    cy.url().should('eq', `${baseUrl}/`);
-    cy.window().then(window => assert.ok(window.localStorage.getItem('accessToken')));
+    cy.get('@request.all').should('have.length', 1);
   });
 });
