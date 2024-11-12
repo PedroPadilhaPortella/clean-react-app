@@ -51,13 +51,13 @@ describe('Login Component', () => {
     const errorWrap = sut.getByTestId('error-wrap');
     expect(errorWrap.childElementCount).toBe(0);
 
-    const emailStatus = sut.getByTestId('email-status');
-    expect(emailStatus.title).toBe(validationStub.errorMessage);
-    expect(emailStatus.textContent).toBe('🔴');
+    expect(sut.getByTestId('email').title).toBe(validationStub.errorMessage);
+    expect(sut.getByTestId('email-label').title).toBe(validationStub.errorMessage);
+    expect(sut.getByTestId('email-wrap').getAttribute('data-status')).toBe('invalid');
 
-    const passwordStatus = sut.getByTestId('password-status');
-    expect(passwordStatus.title).toBe(validationStub.errorMessage);
-    expect(passwordStatus.textContent).toBe('🔴');
+    expect(sut.getByTestId('password').title).toBe(validationStub.errorMessage);
+    expect(sut.getByTestId('password-label').title).toBe(validationStub.errorMessage);
+    expect(sut.getByTestId('password-wrap').getAttribute('data-status')).toBe('invalid');
 
     const submitButton = sut.getByTestId('submit') as HTMLButtonElement;
     expect(submitButton.disabled).toBe(true);
@@ -70,9 +70,9 @@ describe('Login Component', () => {
     const emailInput = sut.getByTestId('email');
     fireEvent.input(emailInput, { target: { value: faker.internet.email() } });
 
-    const emailStatus = sut.getByTestId('email-status');
-    expect(emailStatus.title).toBe(validationError);
-    expect(emailStatus.textContent).toBe('🔴');
+    expect(emailInput.title).toBe(validationError);
+    expect(sut.getByTestId('email-label').title).toBe(validationError);
+    expect(sut.getByTestId('email-wrap').getAttribute('data-status')).toBe('invalid');
   });
 
   test('Should show password error if Validation fails', () => {
@@ -82,9 +82,9 @@ describe('Login Component', () => {
     const passwordInput = sut.getByTestId('password');
     fireEvent.input(passwordInput, { target: { value: faker.internet.password() } });
 
-    const passwordStatus = sut.getByTestId('password-status');
-    expect(passwordStatus.title).toBe(validationError);
-    expect(passwordStatus.textContent).toBe('🔴');
+    expect(passwordInput.title).toBe(validationError);
+    expect(sut.getByTestId('password-label').title).toBe(validationError);
+    expect(sut.getByTestId('password-wrap').getAttribute('data-status')).toBe('invalid');
   });
 
   test('Should show valid email if validation succeeds', () => {
@@ -93,9 +93,9 @@ describe('Login Component', () => {
     const emailInput = sut.getByTestId('email');
     fireEvent.input(emailInput, { target: { value: faker.internet.email() } });
 
-    const emailStatus = sut.getByTestId('email-status');
-    expect(emailStatus.title).toBe('Tudo certo!');
-    expect(emailStatus.textContent).toBe('🟢');
+    expect(emailInput.title).toBe('');
+    expect(sut.getByTestId('email-label').title).toBe('');
+    expect(sut.getByTestId('email-wrap').getAttribute('data-status')).toBe('valid');
   });
 
   test('Should show valid password if validation succeeds', () => {
@@ -104,9 +104,9 @@ describe('Login Component', () => {
     const passwordInput = sut.getByTestId('password');
     fireEvent.input(passwordInput, { target: { value: faker.internet.password() } });
 
-    const passwordStatus = sut.getByTestId('password-status');
-    expect(passwordStatus.title).toBe('Tudo certo!');
-    expect(passwordStatus.textContent).toBe('🟢');
+    expect(passwordInput.title).toBe('');
+    expect(sut.getByTestId('password-label').title).toBe('');
+    expect(sut.getByTestId('password-wrap').getAttribute('data-status')).toBe('valid');
   });
 
   test('Should enable submit button if form is valid', () => {
