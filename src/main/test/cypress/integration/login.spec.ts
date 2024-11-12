@@ -63,9 +63,7 @@ describe('Login', () => {
     });
 
     cy.getByTestId('email').type(faker.internet.email());
-    cy.getByTestId('password').type(faker.random.alphaNumeric(6));
-    cy.getByTestId('submit').click();
-
+    cy.getByTestId('password').type(faker.random.alphaNumeric(6)).type('{enter}');
     cy.getByTestId('main-error').should('contain.text', 'Credenciais inválidas');
     cy.getByTestId('spinner').should('not.exist');
     cy.url().should('eq', `${baseUrl}/login`);
@@ -138,5 +136,18 @@ describe('Login', () => {
     cy.getByTestId('submit').dblclick();
 
     cy.get('@request.all').should('have.length', 1);
+  });
+
+  it('Should not call submit when form is invalid', () => {
+    cy.route({
+      method: 'POST',
+      url: /login/,
+      status: 200,
+      response: { accessToken: faker.random.uuid() }
+    }).as('request');
+
+    cy.getByTestId('email').type(faker.internet.email()).type('{enter}');
+
+    cy.get('@request.all').should('have.length', 0);
   });
 });
