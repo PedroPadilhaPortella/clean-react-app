@@ -3,6 +3,12 @@ import faker from 'faker';
 import { testHttpCallsCount, testInputStatus, testLocalStorageItem, testMainError, testUrlMatch } from '../support/form-helper';
 import { mockInvalidCredentialError, mockOk, mockUnexpectedError } from '../support/http.mock';
 
+const fillFormFields = (): void => {
+  cy.getByTestId('email').type(faker.internet.email());
+  cy.getByTestId('password').type(faker.random.alphaNumeric(6));
+  cy.getByTestId('submit').click();
+};
+
 describe('Login', () => {
 
   beforeEach(() => {
@@ -42,8 +48,8 @@ describe('Login', () => {
   it('Should present error when invalid credentials are provided', () => {
     mockInvalidCredentialError(/login/);
 
-    cy.getByTestId('email').type(faker.internet.email());
-    cy.getByTestId('password').type(faker.random.alphaNumeric(6)).type('{enter}');
+    fillFormFields();
+
     testMainError('Credenciais inválidas');
     testUrlMatch('/login');
   });
@@ -51,9 +57,7 @@ describe('Login', () => {
   it('Should present error on default error cases', () => {
     mockUnexpectedError(/login/, 'POST');
 
-    cy.getByTestId('email').type(faker.internet.email());
-    cy.getByTestId('password').type(faker.random.alphaNumeric(6));
-    cy.getByTestId('submit').click();
+    fillFormFields();
 
     testMainError('Algo de errado aconteceu. Tente novamente em breve.');
     testUrlMatch('/login');
@@ -62,9 +66,7 @@ describe('Login', () => {
   it('Should present error when the API does not return an accessToken', () => {
     mockOk(/login/, 'POST', { invalidProperty: faker.random.words() });
 
-    cy.getByTestId('email').type(faker.internet.email());
-    cy.getByTestId('password').type(faker.random.alphaNumeric(6));
-    cy.getByTestId('submit').click();
+    fillFormFields();
 
     testMainError('Algo de errado aconteceu. Tente novamente em breve.');
     testUrlMatch('/login');
@@ -73,9 +75,7 @@ describe('Login', () => {
   it('Should present save accessToken when valid credentials are provided', () => {
     mockOk(/login/, 'POST', { accessToken: faker.random.uuid() });
 
-    cy.getByTestId('email').type(faker.internet.email());
-    cy.getByTestId('password').type(faker.random.alphaNumeric(6));
-    cy.getByTestId('submit').click();
+    fillFormFields();
 
     cy.getByTestId('main-error').should('not.exist');
     cy.getByTestId('spinner').should('not.exist');
