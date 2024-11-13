@@ -63,6 +63,14 @@ describe('Login Component', () => {
     expect(submitButton.disabled).toBe(true);
   });
 
+  test('Should focus email input on email label click', () => {
+    const { sut } = createSut();
+    const emailInput = sut.getByTestId('email');
+    const emailLabel = sut.getByTestId('email-label');
+    fireEvent.click(emailLabel);
+    expect(document.activeElement).toBe(emailInput);
+  });
+
   test('Should show email error if Validation fails', () => {
     const validationError = faker.random.words();
     const { sut } = createSut({ validationError });

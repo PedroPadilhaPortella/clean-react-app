@@ -70,6 +70,14 @@ describe('Register Component', () => {
     expect(submitButton.disabled).toBe(true);
   });
 
+  test('Should focus name input on name label click', () => {
+    const { sut } = createSut();
+    const emailInput = sut.getByTestId('email');
+    const emailLabel = sut.getByTestId('email-label');
+    fireEvent.click(emailLabel);
+    expect(document.activeElement).toBe(emailInput);
+  });
+
   test('Should show name error if Validation fails', () => {
     const validationError = faker.random.words();
     const { sut } = createSut({ validationError });
