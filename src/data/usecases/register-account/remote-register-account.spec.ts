@@ -1,6 +1,5 @@
 import faker from 'faker';
 
-import { RegisterAccountParams } from '@/domain/usecases';
 import { RemoteRegisterAccount } from '@/data/usecases';
 import { HttpPostClientSpy } from '@/data/test';
 import { AccountModel } from '@/domain/models';
@@ -10,11 +9,11 @@ import { EmailInUseError, UnexpectedError } from '@/domain/errors';
 
 type SutTypes = {
   sut: RemoteRegisterAccount
-  httpPostClientSpy: HttpPostClientSpy<RegisterAccountParams, AccountModel>
+  httpPostClientSpy: HttpPostClientSpy<AccountModel>
 };
 
 const createSut = (url: string = faker.internet.url()): SutTypes => {
-  const httpPostClientSpy = new HttpPostClientSpy<RegisterAccountParams, AccountModel>();
+  const httpPostClientSpy = new HttpPostClientSpy<AccountModel>();
   const sut = new RemoteRegisterAccount(url, httpPostClientSpy);
   return { sut, httpPostClientSpy };
 };

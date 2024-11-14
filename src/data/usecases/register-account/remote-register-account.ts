@@ -7,7 +7,7 @@ export class RemoteRegisterAccount implements RegisterAccount {
 
   constructor(
     private readonly url: string,
-    private readonly httpPostClient: HttpPostClient<RegisterAccountParams, AccountModel>
+    private readonly httpPostClient: HttpPostClient<AccountModel>
   ) { }
 
   async register(params: RegisterAccountParams): Promise<AccountModel> {
