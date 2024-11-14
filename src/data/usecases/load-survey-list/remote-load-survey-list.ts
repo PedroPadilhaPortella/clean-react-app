@@ -13,7 +13,6 @@ export class RemoteLoadSurveyList {
 
     switch (response.statusCode) {
       case HttpStatusCode.OK: return response.body;
-      case HttpStatusCode.FORBIDDEN: throw new UnexpectedError();
       default: throw new UnexpectedError();
     }
   }
