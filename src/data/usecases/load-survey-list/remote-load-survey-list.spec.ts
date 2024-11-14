@@ -5,6 +5,7 @@ import { RemoteLoadSurveyList } from './remote-load-survey-list';
 import { HttpStatusCode } from '@/data/protocols';
 import { UnexpectedError } from '@/domain/errors';
 import { SurveyModel } from '@/domain/models';
+import { mockSurveyListModel } from '@/domain/test';
 
 type SutTypes = {
   sut: RemoteLoadSurveyList
@@ -45,5 +46,13 @@ describe('RemoteLoadSurveyList', () => {
     httpGetClientSpy.response = { statusCode: HttpStatusCode.SERVER_ERROR };
     const promise = sut.load();
     await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
+
+  test('Should return a list of SurveyModels when HttpPostClient returns 200', async () => {
+    const { sut, httpGetClientSpy } = createSut();
+    const httpResult = mockSurveyListModel();
+    httpGetClientSpy.response = { statusCode: HttpStatusCode.OK, body: httpResult };
+    const response = await sut.load();
+    expect(response).toEqual(httpResult);
   });
 });

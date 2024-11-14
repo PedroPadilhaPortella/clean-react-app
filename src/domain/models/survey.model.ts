@@ -1,12 +1,12 @@
 export type SurveyModel = {
   id: string
   question: string
-  answers: Answer[]
+  answers: SurveyAnswerModel[]
   date: Date
   didAnswer: boolean
 };
 
-interface Answer {
+interface SurveyAnswerModel {
   answer: string
   image?: string
 }
