@@ -13,7 +13,10 @@ describe('CompareFieldsValidation', () => {
     const field = faker.database.column();
     const fieldToCompare = faker.database.column();
     const sut = createSut(field, fieldToCompare);
-    const error = sut.validate({ [field]: faker.random.word(), [fieldToCompare]: faker.random.word() });
+    const error = sut.validate({
+      [field]: faker.random.alphaNumeric(5),
+      [fieldToCompare]: faker.random.word()
+    });
     expect(error).toEqual(new InvalidFieldError());
   });
 
