@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { AccessToken, RegisterAccount } from '@/domain/usecases';
-import { Footer, FormStatus, Header, Input, SubmitButton } from '@/presentation/components';
+import { Footer, FormStatus, LoginHeader, Input, SubmitButton } from '@/presentation/components';
 import Context from '@/presentation/contexts/form/form.context';
 import { Validation } from '@/presentation/protocols/validation';
 
@@ -72,7 +72,7 @@ const Register: React.FC<Props> = ({ validation, registerAccount, accessToken }:
 
   return (
     <div className={styles.register}>
-      <Header />
+      <LoginHeader />
       <Context.Provider value={{ state, setState }}>
         <form data-testid="form" className={styles.form} onSubmit={handleSubmit}>
           <h2>Crie uma conta</h2>

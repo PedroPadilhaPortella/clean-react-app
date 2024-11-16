@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { Footer, Header, Input, FormStatus, SubmitButton } from '@/presentation/components';
+import { Footer, LoginHeader, Input, FormStatus, SubmitButton } from '@/presentation/components';
 import { Validation } from '@/presentation/protocols/validation';
 import Context from '@/presentation/contexts/form/form.context';
 import { Authentication, AccessToken } from '@/domain/usecases';
@@ -59,7 +59,7 @@ const Login: React.FC<Props> = ({ validation, authentication, accessToken }: Pro
 
   return (
     <div className={styles.login}>
-      <Header />
+      <LoginHeader />
       <Context.Provider value={{ state, setState }}>
         <form data-testid="form" className={styles.form} onSubmit={handleSubmit}>
           <h2>Login</h2>
