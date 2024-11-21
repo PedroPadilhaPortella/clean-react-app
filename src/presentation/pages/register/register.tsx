@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { AccessToken, RegisterAccount } from '@/domain/usecases';
+import { CurrentAccount, RegisterAccount } from '@/domain/usecases';
 import { Footer, FormStatus, LoginHeader, Input, SubmitButton } from '@/presentation/components';
 import Context from '@/presentation/contexts/form/form.context';
 import { Validation } from '@/presentation/protocols/validation';
@@ -11,10 +11,10 @@ import styles from './register.module.scss';
 type Props = {
   validation: Validation
   registerAccount: RegisterAccount
-  accessToken: AccessToken
+  currentAccount: CurrentAccount
 };
 
-const Register: React.FC<Props> = ({ validation, registerAccount, accessToken }: Props) => {
+const Register: React.FC<Props> = ({ validation, registerAccount, currentAccount }: Props) => {
   const history = useHistory();
 
   const [state, setState] = useState({
@@ -57,13 +57,13 @@ const Register: React.FC<Props> = ({ validation, registerAccount, accessToken }:
       if (state.isLoading || state.isFormInvalid) return;
 
       setState({ ...state, isLoading: true });
-      const response = await registerAccount.register({
+      const account = await registerAccount.register({
         name: state.name,
         email: state.email,
         password: state.password,
         passwordConfirmation: state.passwordConfirm
       });
-      await accessToken.save(response.accessToken);
+      await currentAccount.update(account);
       history.replace('/');
     } catch (error) {
       setState({ ...state, isLoading: false, mainError: error.message });

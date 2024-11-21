@@ -63,7 +63,7 @@ describe('Login', () => {
     testUrlMatch('/login');
   });
 
-  it('Should present error when the API does not return an accessToken', () => {
+  it('Should present error when the API does not return an account', () => {
     mockOk(/login/, 'POST', { invalidProperty: faker.random.words() });
 
     fillFormFields();
@@ -72,19 +72,19 @@ describe('Login', () => {
     testUrlMatch('/login');
   });
 
-  it('Should present save accessToken when valid credentials are provided', () => {
-    mockOk(/login/, 'POST', { accessToken: faker.random.uuid() });
+  it('Should present update currentAccount when valid credentials are provided', () => {
+    mockOk(/login/, 'POST', { accessToken: faker.random.uuid(), name: faker.name.findName() });
 
     fillFormFields();
 
     cy.getByTestId('main-error').should('not.exist');
     cy.getByTestId('spinner').should('not.exist');
     testUrlMatch('/');
-    testLocalStorageItem('accessToken');
+    testLocalStorageItem('currentAccount');
   });
 
   it('Should prevent multiple submits', () => {
-    mockOk(/login/, 'POST', { accessToken: faker.random.uuid() });
+    mockOk(/login/, 'POST', { accessToken: faker.random.uuid(), name: faker.name.findName() });
 
     cy.getByTestId('email').type(faker.internet.email());
     cy.getByTestId('password').type(faker.random.alphaNumeric(6));
@@ -94,7 +94,7 @@ describe('Login', () => {
   });
 
   it('Should not call submit when form is invalid', () => {
-    mockOk(/login/, 'POST', { accessToken: faker.random.uuid() });
+    mockOk(/login/, 'POST', { accessToken: faker.random.uuid(), name: faker.name.findName() });
 
     cy.getByTestId('email').type(faker.internet.email()).type('{enter}');
 

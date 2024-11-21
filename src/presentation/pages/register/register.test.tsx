@@ -5,14 +5,14 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 
 import { Register } from '@/presentation/pages';
-import { AccessTokenMock, RegisterAccountSpy, ValidationStub } from '@/presentation/test';
+import { CurrentAccountMock, RegisterAccountSpy, ValidationStub } from '@/presentation/test';
 import { InvalidCredentialsError } from '@/domain/errors';
 
 const history = createMemoryHistory({ initialEntries: ['/register'] });
 
 type SutTypes = {
   sut: RenderResult
-  accessTokenMock: AccessTokenMock
+  currentAccountMock: CurrentAccountMock
   registerAccountSpy: RegisterAccountSpy
 };
 
@@ -22,7 +22,7 @@ type SutParams = {
 
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
-  const accessTokenMock = new AccessTokenMock();
+  const currentAccountMock = new CurrentAccountMock();
   const registerAccountSpy = new RegisterAccountSpy();
   validationStub.errorMessage = params?.validationError;
 
@@ -31,12 +31,12 @@ const createSut = (params?: SutParams): SutTypes => {
       <Register
         validation={validationStub}
         registerAccount={registerAccountSpy}
-        accessToken={accessTokenMock}
+        currentAccount={currentAccountMock}
       />
     </Router>
   );
 
-  return { sut, registerAccountSpy, accessTokenMock };
+  return { sut, registerAccountSpy, currentAccountMock };
 };
 
 describe('Register Component', () => {
@@ -307,8 +307,8 @@ describe('Register Component', () => {
     expect(errorWrap.childElementCount).toBe(1);
   });
 
-  test('Should save AccessToken and navigate to home on success', async () => {
-    const { sut, registerAccountSpy, accessTokenMock } = createSut();
+  test('Should update currentAccount and navigate to home on success', async () => {
+    const { sut, registerAccountSpy, currentAccountMock } = createSut();
 
     const name = faker.name.firstName();
     const nameInput = sut.getByTestId('name');
@@ -331,16 +331,16 @@ describe('Register Component', () => {
     const formElement = sut.getByTestId('form');
     await waitFor(() => formElement);
 
-    expect(accessTokenMock.accessToken).toBe(registerAccountSpy.account.accessToken);
+    expect(currentAccountMock.account.accessToken).toBe(registerAccountSpy.account.accessToken);
     expect(history.length).toBe(1);
     expect(history.location.pathname).toBe('/');
   });
 
-  test('Should present error if save AccessToken fails', async () => {
-    const { sut, accessTokenMock } = createSut();
+  test('Should present error if update currentAccount fails', async () => {
+    const { sut, currentAccountMock } = createSut();
     const error = new InvalidCredentialsError();
 
-    jest.spyOn(accessTokenMock, 'save').mockReturnValueOnce(Promise.reject(error));
+    jest.spyOn(currentAccountMock, 'update').mockReturnValueOnce(Promise.reject(error));
 
     const name = faker.name.firstName();
     const nameInput = sut.getByTestId('name');

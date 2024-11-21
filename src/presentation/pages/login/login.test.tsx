@@ -4,7 +4,7 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import { cleanup, fireEvent, render, RenderResult, waitFor } from '@testing-library/react';
-import { AuthenticationSpy, ValidationStub, AccessTokenMock } from '@/presentation/test';
+import { AuthenticationSpy, ValidationStub, CurrentAccountMock } from '@/presentation/test';
 import { InvalidCredentialsError } from '@/domain/errors';
 import { Login } from '@/presentation/pages';
 
@@ -13,7 +13,7 @@ const history = createMemoryHistory({ initialEntries: ['/login'] });
 type SutTypes = {
   sut: RenderResult
   validationStub: ValidationStub
-  accessTokenMock: AccessTokenMock
+  currentAccountMock: CurrentAccountMock
   authenticationSpy: AuthenticationSpy
 };
 
@@ -23,7 +23,7 @@ type SutParams = {
 
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
-  const accessTokenMock = new AccessTokenMock();
+  const currentAccountMock = new CurrentAccountMock();
   const authenticationSpy = new AuthenticationSpy();
   validationStub.errorMessage = params?.validationError;
 
@@ -32,12 +32,12 @@ const createSut = (params?: SutParams): SutTypes => {
       <Login
         validation={validationStub}
         authentication={authenticationSpy}
-        accessToken={accessTokenMock}
+        currentAccount={currentAccountMock}
       />
     </Router>
   );
 
-  return { sut, validationStub, authenticationSpy, accessTokenMock };
+  return { sut, validationStub, authenticationSpy, currentAccountMock };
 };
 
 describe('Login Component', () => {
@@ -222,8 +222,8 @@ describe('Login Component', () => {
     expect(errorWrap.childElementCount).toBe(1);
   });
 
-  test('Should save AccessToken and navigate to home on success', async () => {
-    const { sut, authenticationSpy, accessTokenMock } = createSut();
+  test('Should update currentAccount and navigate to home on success', async () => {
+    const { sut, authenticationSpy, currentAccountMock } = createSut();
 
     const email = faker.internet.email();
     const emailInput = sut.getByTestId('email');
@@ -239,16 +239,16 @@ describe('Login Component', () => {
     const formElement = sut.getByTestId('form');
     await waitFor(() => formElement);
 
-    expect(accessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken);
+    expect(currentAccountMock.account.accessToken).toBe(authenticationSpy.account.accessToken);
     expect(history.length).toBe(1);
     expect(history.location.pathname).toBe('/');
   });
 
-  test('Should present error if save AccessToken fails', async () => {
-    const { sut, accessTokenMock } = createSut();
+  test('Should present error if update currentAccount fails', async () => {
+    const { sut, currentAccountMock } = createSut();
     const error = new InvalidCredentialsError();
 
-    jest.spyOn(accessTokenMock, 'save').mockReturnValueOnce(Promise.reject(error));
+    jest.spyOn(currentAccountMock, 'update').mockReturnValueOnce(Promise.reject(error));
 
     const email = faker.internet.email();
     const emailInput = sut.getByTestId('email');
