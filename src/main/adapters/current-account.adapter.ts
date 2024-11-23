@@ -6,3 +6,7 @@ export const setCurrentAccountAdapter = async (account: AccountModel): Promise<v
   if (!account?.accessToken) throw new UnexpectedError();
   await localStorageAdapterFactory().set('currentAccount', account);
 };
+
+export const getCurrentAccountAdapter = async (): Promise<AccountModel> => {
+  return localStorageAdapterFactory().get('currentAccount');
+};

@@ -1,6 +1,5 @@
 import { LocalStorageAdapter } from '@/infra/cache/local-storage.adapter';
-import { Storage } from '@/data/protocols';
 
-export const localStorageAdapterFactory = (): Storage => {
+export const localStorageAdapterFactory = (): LocalStorageAdapter => {
   return new LocalStorageAdapter();
 };
