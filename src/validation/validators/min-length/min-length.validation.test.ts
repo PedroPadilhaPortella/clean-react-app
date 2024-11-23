@@ -24,8 +24,8 @@ describe('MinLengthValidation', () => {
   });
 
   test('Should return false when the field does not exist in the schema', () => {
-    const sut = createSut(faker.database.column());
-    const error = sut.validate({ [faker.database.column()]: faker.random.alphaNumeric(4) });
+    const sut = createSut('lastName');
+    const error = sut.validate({ firstName: faker.random.alphaNumeric(4) });
     expect(error).toBeFalsy();
   });
 });
