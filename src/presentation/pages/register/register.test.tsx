@@ -47,27 +47,25 @@ describe('Register Component', () => {
     const validationError = faker.random.words();
     createSut({ validationError });
 
-    const errorWrap = screen.getByTestId('error-wrap');
-    expect(errorWrap.childElementCount).toBe(0);
+    expect(screen.getByTestId('error-wrap').children).toHaveLength(0);
 
-    expect(screen.getByTestId('name').title).toBe(validationError);
-    expect(screen.getByTestId('name-label').title).toBe(validationError);
-    expect(screen.getByTestId('name-wrap').getAttribute('data-status')).toBe('invalid');
+    expect(screen.getByTestId('name')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('name-label')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('name-wrap')).toHaveAttribute('data-status', 'invalid');
 
-    expect(screen.getByTestId('email').title).toBe(validationError);
-    expect(screen.getByTestId('email-label').title).toBe(validationError);
-    expect(screen.getByTestId('email-wrap').getAttribute('data-status')).toBe('invalid');
+    expect(screen.getByTestId('email')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('email-label')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('email-wrap')).toHaveAttribute('data-status', 'invalid');
 
-    expect(screen.getByTestId('password').title).toBe(validationError);
-    expect(screen.getByTestId('password-label').title).toBe(validationError);
-    expect(screen.getByTestId('password-wrap').getAttribute('data-status')).toBe('invalid');
+    expect(screen.getByTestId('password')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('password-label')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('password-wrap')).toHaveAttribute('data-status', 'invalid');
 
-    expect(screen.getByTestId('passwordConfirm').title).toBe(validationError);
-    expect(screen.getByTestId('passwordConfirm-label').title).toBe(validationError);
-    expect(screen.getByTestId('passwordConfirm-wrap').getAttribute('data-status')).toBe('invalid');
+    expect(screen.getByTestId('passwordConfirm')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('passwordConfirm-label')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('passwordConfirm-wrap')).toHaveAttribute('data-status', 'invalid');
 
-    const submitButton = screen.getByTestId('submit') as HTMLButtonElement;
-    expect(submitButton.disabled).toBe(true);
+    expect(screen.getByTestId('submit')).toBeDisabled();
   });
 
   test('Should focus name input on name label click', () => {
@@ -85,9 +83,9 @@ describe('Register Component', () => {
     const nameInput = screen.getByTestId('name');
     fireEvent.input(nameInput, { target: { value: faker.name.firstName() } });
 
-    expect(screen.getByTestId('name').title).toBe(validationError);
-    expect(screen.getByTestId('name-label').title).toBe(validationError);
-    expect(screen.getByTestId('name-wrap').getAttribute('data-status')).toBe('invalid');
+    expect(screen.getByTestId('name')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('name-label')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('name-wrap')).toHaveAttribute('data-status', 'invalid');
   });
 
   test('Should show email error if Validation fails', () => {
@@ -97,9 +95,9 @@ describe('Register Component', () => {
     const emailInput = screen.getByTestId('email');
     fireEvent.input(emailInput, { target: { value: faker.internet.email() } });
 
-    expect(screen.getByTestId('email').title).toBe(validationError);
-    expect(screen.getByTestId('email-label').title).toBe(validationError);
-    expect(screen.getByTestId('email-wrap').getAttribute('data-status')).toBe('invalid');
+    expect(screen.getByTestId('email')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('email-label')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('email-wrap')).toHaveAttribute('data-status', 'invalid');
   });
 
   test('Should show password error if Validation fails', () => {
@@ -109,9 +107,9 @@ describe('Register Component', () => {
     const passwordInput = screen.getByTestId('password');
     fireEvent.input(passwordInput, { target: { value: faker.internet.password() } });
 
-    expect(screen.getByTestId('password').title).toBe(validationError);
-    expect(screen.getByTestId('password-label').title).toBe(validationError);
-    expect(screen.getByTestId('password-wrap').getAttribute('data-status')).toBe('invalid');
+    expect(screen.getByTestId('password')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('password-label')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('password-wrap')).toHaveAttribute('data-status', 'invalid');
   });
 
   test('Should show confirm password error if Validation fails', () => {
@@ -121,9 +119,9 @@ describe('Register Component', () => {
     const passwordConfirmInput = screen.getByTestId('passwordConfirm');
     fireEvent.input(passwordConfirmInput, { target: { value: faker.internet.password() } });
 
-    expect(screen.getByTestId('passwordConfirm').title).toBe(validationError);
-    expect(screen.getByTestId('passwordConfirm-label').title).toBe(validationError);
-    expect(screen.getByTestId('passwordConfirm-wrap').getAttribute('data-status')).toBe('invalid');
+    expect(screen.getByTestId('passwordConfirm')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('passwordConfirm-label')).toHaveProperty('title', validationError);
+    expect(screen.getByTestId('passwordConfirm-wrap')).toHaveAttribute('data-status', 'invalid');
   });
 
   test('Should show valid name if validation succeeds', () => {
@@ -133,8 +131,8 @@ describe('Register Component', () => {
     fireEvent.input(nameInput, { target: { value: faker.name.firstName() } });
 
     expect(nameInput.title).toBe('');
-    expect(screen.getByTestId('name-label').title).toBe('');
-    expect(screen.getByTestId('name-wrap').getAttribute('data-status')).toBe('valid');
+    expect(screen.getByTestId('name-label')).toHaveProperty('title', '');
+    expect(screen.getByTestId('name-wrap')).toHaveAttribute('data-status', 'valid');
   });
 
   test('Should show valid email if validation succeeds', () => {
@@ -143,9 +141,9 @@ describe('Register Component', () => {
     const emailInput = screen.getByTestId('email');
     fireEvent.input(emailInput, { target: { value: faker.internet.email() } });
 
-    expect(emailInput.title).toBe('');
-    expect(screen.getByTestId('email-label').title).toBe('');
-    expect(screen.getByTestId('email-wrap').getAttribute('data-status')).toBe('valid');
+    expect(emailInput).toHaveProperty('title', '');
+    expect(screen.getByTestId('email-label')).toHaveProperty('title', '');
+    expect(screen.getByTestId('email-wrap')).toHaveAttribute('data-status', 'valid');
   });
 
   test('Should show valid password if validation succeeds', () => {
@@ -154,9 +152,9 @@ describe('Register Component', () => {
     const passwordInput = screen.getByTestId('password');
     fireEvent.input(passwordInput, { target: { value: faker.internet.password() } });
 
-    expect(passwordInput.title).toBe('');
-    expect(screen.getByTestId('password-label').title).toBe('');
-    expect(screen.getByTestId('password-wrap').getAttribute('data-status')).toBe('valid');
+    expect(passwordInput).toHaveProperty('title', '');
+    expect(screen.getByTestId('password-label')).toHaveProperty('title', '');
+    expect(screen.getByTestId('password-wrap')).toHaveAttribute('data-status', 'valid');
   });
 
   test('Should show valid confirm password if validation succeeds', () => {
@@ -165,9 +163,9 @@ describe('Register Component', () => {
     const passwordConfirmInput = screen.getByTestId('passwordConfirm');
     fireEvent.input(passwordConfirmInput, { target: { value: faker.internet.password() } });
 
-    expect(passwordConfirmInput.title).toBe('');
-    expect(screen.getByTestId('passwordConfirm-label').title).toBe('');
-    expect(screen.getByTestId('passwordConfirm-wrap').getAttribute('data-status')).toBe('valid');
+    expect(passwordConfirmInput).toHaveProperty('title', '');
+    expect(screen.getByTestId('passwordConfirm-label')).toHaveProperty('title', '');
+    expect(screen.getByTestId('passwordConfirm-wrap')).toHaveAttribute('data-status', 'valid');
   });
 
   test('Should enable submit button when form is valid', () => {
@@ -185,8 +183,7 @@ describe('Register Component', () => {
     const passwordConfirmInput = screen.getByTestId('passwordConfirm');
     fireEvent.input(passwordConfirmInput, { target: { value: faker.internet.password() } });
 
-    const submitButton = screen.getByTestId('submit') as HTMLButtonElement;
-    expect(submitButton.disabled).toBe(false);
+    expect(screen.getByTestId('submit')).toBeEnabled();
   });
 
   test('Should show spinner on submit', () => {
@@ -207,8 +204,8 @@ describe('Register Component', () => {
     const submitButton = screen.getByTestId('submit') as HTMLButtonElement;
     fireEvent.click(submitButton);
 
-    const spinner = screen.getByTestId('spinner');
-    expect(spinner).toBeTruthy();
+    const spinner = screen.queryByTestId('spinner');
+    expect(spinner).toBeInTheDocument();
   });
 
   test('Should call RegisterAccount with correct values', () => {
@@ -302,9 +299,8 @@ describe('Register Component', () => {
     await waitFor(() => errorWrap);
 
     const mainError = screen.getByTestId('main-error');
-
-    expect(mainError.textContent).toEqual(error.message);
-    expect(errorWrap.childElementCount).toBe(1);
+    expect(mainError).toHaveTextContent(error.message);
+    expect(errorWrap.children).toHaveLength(1);
   });
 
   test('Should update currentAccount and navigate to home on success', async () => {

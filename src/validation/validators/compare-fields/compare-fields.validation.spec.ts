@@ -10,8 +10,8 @@ const createSut = (field: string, fieldToCompare: string): CompareFieldsValidati
 describe('CompareFieldsValidation', () => {
 
   it('Should return an error when the fields are different', () => {
-    const field = faker.database.column();
-    const fieldToCompare = faker.database.column();
+    const field = 'firstField';
+    const fieldToCompare = 'secondField';
     const sut = createSut(field, fieldToCompare);
     const error = sut.validate({
       [field]: 'field',
