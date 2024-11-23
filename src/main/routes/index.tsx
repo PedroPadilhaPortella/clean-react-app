@@ -1,14 +1,17 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import { setCurrentAccountAdapter } from '@/main/adapters/current-account.adapter';
+import { getCurrentAccountAdapter, setCurrentAccountAdapter } from '@/main/adapters/current-account.adapter';
 import { loginFactory, registerFactory } from '@/main/factories/pages';
 import { SurveyList } from '@/presentation/pages';
 import { ApiContext } from '@/presentation/contexts';
 
 const Router: React.FC = () => {
   return (
-    <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountAdapter }}>
+    <ApiContext.Provider value={{
+      setCurrentAccount: setCurrentAccountAdapter,
+      getCurrentAccount: getCurrentAccountAdapter
+    }}>
       <BrowserRouter>
         <Switch>
           <Route path="/login" exact component={loginFactory} />
