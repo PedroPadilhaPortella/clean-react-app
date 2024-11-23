@@ -7,25 +7,24 @@ jest.mock('@/infra/cache/local-storage.adapter');
 
 describe('CurrentAccountAdapter', () => {
 
-  test('Should call LocalStorageAdapter.set with correct values', async () => {
+  test('Should call LocalStorageAdapter.set with correct values', () => {
     const account = mockAccountModel();
     const localStorageSetSpy = jest.spyOn(LocalStorageAdapter.prototype, 'set');
 
-    await setCurrentAccountAdapter(account);
+    setCurrentAccountAdapter(account);
     expect(localStorageSetSpy).toHaveBeenCalledWith('currentAccount', account);
   });
 
-  test('Should throw UnexpectedError', async () => {
-    const promise = setCurrentAccountAdapter(undefined);
-    await expect(promise).rejects.toThrow(new UnexpectedError());
+  test('Should throw UnexpectedError', () => {
+    expect(() => setCurrentAccountAdapter(undefined)).toThrow(new UnexpectedError());
   });
 
-  test('Should call LocalStorageAdapter.get with correct value', async () => {
+  test('Should call LocalStorageAdapter.get with correct value', () => {
     const account = mockAccountModel();
     const localStorageGetSpy = jest.spyOn(LocalStorageAdapter.prototype, 'get')
-      .mockReturnValueOnce(Promise.resolve(account));
+      .mockReturnValueOnce(account);
 
-    const result = await getCurrentAccountAdapter();
+    const result = getCurrentAccountAdapter();
     expect(result).toEqual(account);
     expect(localStorageGetSpy).toHaveBeenCalledWith('currentAccount');
   });

@@ -1,4 +1,4 @@
 export interface Storage {
-  set: (key: string, value: object) => Promise<void>
-  get: (key: string) => Promise<any>
+  set: (key: string, value: object) => void
+  get: (key: string) => any
 }
