@@ -1,3 +1,3 @@
 export interface Storage {
-  set: (key: string, value: any) => Promise<void>
+  set: (key: string, value: object) => Promise<void>
 }

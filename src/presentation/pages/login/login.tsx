@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import { Footer, LoginHeader, Input, FormStatus, SubmitButton } from '@/presentation/components';
 import { Validation } from '@/presentation/protocols/validation';
 import Context from '@/presentation/contexts/form/form.context';
-import { Authentication, CurrentAccount } from '@/domain/usecases';
+import { Authentication } from '@/domain/usecases';
 
 import styles from './login.module.scss';
+import { ApiContext } from '@/presentation/contexts';
 
 type Props = {
   validation: Validation
   authentication: Authentication
-  currentAccount: CurrentAccount
 };
 
-const Login: React.FC<Props> = ({ validation, authentication, currentAccount }: Props) => {
+const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
   const history = useHistory();
+  const { setCurrentAccount } = useContext(ApiContext);
 
   const [state, setState] = useState({
     isLoading: false,
@@ -50,7 +51,7 @@ const Login: React.FC<Props> = ({ validation, authentication, currentAccount }: 
 
       setState({ ...state, isLoading: true });
       const account = await authentication.auth({ email: state.email, password: state.password });
-      await currentAccount.update(account);
+      await setCurrentAccount(account);
       history.replace('/');
     } catch (error) {
       setState({ ...state, isLoading: false, mainError: error.message });
