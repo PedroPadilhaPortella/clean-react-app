@@ -3,13 +3,13 @@ import React from 'react';
 
 import { SurveyList } from '@/presentation/pages';
 import { LoadSurveyListSpy } from '@/presentation/test';
+import { UnexpectedError } from '@/domain/errors';
 
 type SutTypes = {
   loadSurveyListSpy: LoadSurveyListSpy
 };
 
-const createSut = (): SutTypes => {
-  const loadSurveyListSpy = new LoadSurveyListSpy();
+const createSut = (loadSurveyListSpy = new LoadSurveyListSpy()): SutTypes => {
   render(<SurveyList loadSurveyList={loadSurveyListSpy} />);
   return { loadSurveyListSpy };
 };
@@ -20,6 +20,7 @@ describe('SurveyList Component', () => {
     createSut();
     const surveyList = screen.getByTestId('survey-list');
     expect(surveyList.querySelectorAll('li:empty')).toHaveLength(4);
+    expect(screen.queryByTestId('error')).not.toBeInTheDocument();
     await waitFor(() => surveyList);
   });
 
@@ -34,5 +35,18 @@ describe('SurveyList Component', () => {
     const surveyList = screen.getByTestId('survey-list');
     await waitFor(() => surveyList);
     expect(surveyList.querySelectorAll('li.surveyItem')).toHaveLength(3);
+    expect(screen.queryByTestId('error')).not.toBeInTheDocument();
+  });
+
+  test('Should render error on failure', async () => {
+    const loadSurveyListSpy = new LoadSurveyListSpy();
+    const error = new UnexpectedError();
+    jest.spyOn(loadSurveyListSpy, 'load').mockRejectedValueOnce(error);
+    createSut(loadSurveyListSpy);
+
+    await waitFor(() => screen.getByRole('heading'));
+
+    expect(screen.queryByTestId('survey-list')).not.toBeInTheDocument();
+    expect(screen.getByTestId('error')).toHaveTextContent(error.message);
   });
 });
