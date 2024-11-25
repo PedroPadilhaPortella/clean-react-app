@@ -8,5 +8,3 @@ export { default as Logo } from './logo';
 export { default as Spinner } from './spinner';
 export { default as SubmitButton } from './submit-button';
 export { default as PrivateRoute } from './private-route/private-route';
-export { default as SurveyItem } from './survey-item';
-export { default as SurveyItemEmpty } from './survey-item-empty';

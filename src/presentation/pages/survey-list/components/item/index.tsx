@@ -3,7 +3,7 @@ import React from 'react';
 import { IconName, Icon } from '@/presentation/components';
 import { SurveyModel } from '@/domain/models';
 
-import styles from './survey-item.module.scss';
+import styles from './item.module.scss';
 
 type Props = {
   survey: SurveyModel

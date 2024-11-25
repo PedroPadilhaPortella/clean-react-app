@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 
-import { SurveyItem, IconName } from '@/presentation/components';
+import { SurveyItem } from '@/presentation/pages/survey-list/components';
+import { IconName } from '@/presentation/components';
 import { mockSurveyModel } from '@/domain/test';
 
 const createSut = (survey = mockSurveyModel()): void => {

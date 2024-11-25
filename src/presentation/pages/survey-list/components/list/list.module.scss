@@ -1,0 +1,12 @@
+.surveyListItem {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: 600px) {
+  .surveyListItem {
+    flex-direction: column;
+  }
+}
