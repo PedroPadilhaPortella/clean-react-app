@@ -12,7 +12,11 @@ type Props = {
 };
 
 const SurveyList: React.FC<Props> = ({ loadSurveyList }: Props) => {
-  const [state, setState] = useState({ surveys: [] as SurveyModel[], error: '' });
+  const [state, setState] = useState({
+    surveys: [] as SurveyModel[],
+    error: '',
+    reload: false
+  });
 
   useEffect(() => {
     (async function () {
@@ -20,7 +24,7 @@ const SurveyList: React.FC<Props> = ({ loadSurveyList }: Props) => {
         .then((surveys) => setState({ ...state, surveys }))
         .catch((error) => setState({ ...state, error: error.message }));
     })();
-  }, []);
+  }, [state.reload]);
 
   return (
     <div className={styles.surveyList}>
