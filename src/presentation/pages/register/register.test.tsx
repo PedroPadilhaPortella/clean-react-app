@@ -1,20 +1,21 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import faker from 'faker';
-import { createMemoryHistory } from 'history';
 import React from 'react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
+import faker from 'faker';
 
-import { Register } from '@/presentation/pages';
-import { RegisterAccountSpy, ValidationStub } from '@/presentation/test';
 import { InvalidCredentialsError } from '@/domain/errors';
-import { AccountModel } from '@/domain/models';
+import { ValidationStub } from '@/presentation/test';
 import { ApiContext } from '@/presentation/contexts';
+import { RegisterAccount } from '@/domain/usecases';
+import { RegisterAccountSpy } from '@/domain/test';
+import { Register } from '@/presentation/pages';
 
 const history = createMemoryHistory({ initialEntries: ['/register'] });
 
 type SutTypes = {
   registerAccountSpy: RegisterAccountSpy
-  setCurrentAccountMock: (account: AccountModel) => Promise<void>
+  setCurrentAccountMock: (account: RegisterAccount.Model) => Promise<void>
 };
 
 type SutParams = {

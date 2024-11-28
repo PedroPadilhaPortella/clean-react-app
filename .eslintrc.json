@@ -23,6 +23,7 @@
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/semi": "error",
     "cypress/unsafe-to-chain-command": "off",
     "react/jsx-uses-react": "error",
@@ -30,6 +31,8 @@
     "react/prop-types": "off",
     "space-before-function-paren": "off",
     "padded-blocks": "off",
+    "import/export": "off",
+    "no-redeclare": "off",
     "eol-last": "off",
     "semi": "off"
   }

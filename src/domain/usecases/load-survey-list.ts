@@ -1,5 +1,12 @@
-import { SurveyModel } from '../models';
+export namespace LoadSurveyList {
+  export type Model = {
+    id: string
+    question: string
+    date: Date
+    didAnswer: boolean
+  };
+}
 
 export interface LoadSurveyList {
-  load: () => Promise<SurveyModel[]>
+  load: () => Promise<LoadSurveyList.Model[]>
 }

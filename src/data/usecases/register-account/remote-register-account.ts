@@ -1,16 +1,20 @@
-import { RegisterAccount, RegisterAccountParams } from '@/domain/usecases';
+import { RegisterAccount } from '@/domain/usecases';
 import { HttpPostClient, HttpStatusCode } from '@/data/protocols';
-import { AccountModel } from '@/domain/models';
 import { EmailInUseError, UnexpectedError } from '@/domain/errors';
+import { AccountModel } from '@/domain/models';
+
+export namespace RemoteRegisterAccount {
+  export type Model = AccountModel;
+}
 
 export class RemoteRegisterAccount implements RegisterAccount {
 
   constructor(
     private readonly url: string,
-    private readonly httpPostClient: HttpPostClient<AccountModel>
+    private readonly httpPostClient: HttpPostClient<RemoteRegisterAccount.Model>
   ) { }
 
-  async register(params: RegisterAccountParams): Promise<AccountModel> {
+  async register(params: RegisterAccount.Params): Promise<RegisterAccount.Model> {
     const response = await this.httpPostClient.post({ url: this.url, body: params });
     switch (response.statusCode) {
       case HttpStatusCode.OK: return response.body;

@@ -2,8 +2,8 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { SurveyList } from '@/presentation/pages';
-import { LoadSurveyListSpy } from '@/presentation/test';
 import { UnexpectedError } from '@/domain/errors';
+import { LoadSurveyListSpy } from '@/domain/test';
 
 type SutTypes = {
   loadSurveyListSpy: LoadSurveyListSpy

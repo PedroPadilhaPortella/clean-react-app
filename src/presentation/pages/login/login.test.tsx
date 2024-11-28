@@ -4,18 +4,19 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { AuthenticationSpy, ValidationStub } from '@/presentation/test';
 import { InvalidCredentialsError } from '@/domain/errors';
-import { Login } from '@/presentation/pages';
-import { AccountModel } from '@/domain/models';
+import { ValidationStub } from '@/presentation/test';
 import { ApiContext } from '@/presentation/contexts';
+import { Authentication } from '@/domain/usecases';
+import { AuthenticationSpy } from '@/domain/test';
+import { Login } from '@/presentation/pages';
 
 const history = createMemoryHistory({ initialEntries: ['/login'] });
 
 type SutTypes = {
   validationStub: ValidationStub
   authenticationSpy: AuthenticationSpy
-  setCurrentAccountMock: (account: AccountModel) => Promise<void>
+  setCurrentAccountMock: (account: Authentication.Model) => Promise<void>
 };
 
 type SutParams = {
