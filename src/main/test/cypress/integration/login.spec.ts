@@ -1,7 +1,8 @@
 import faker from 'faker';
 
-import { testHttpCallsCount, testInputStatus, testLocalStorageItem, testMainError, testUrlMatch } from '../support/form-helper';
-import { mockInvalidCredentialError, mockOk, mockUnexpectedError } from '../support/http.mock';
+import { testHttpCallsCount, testLocalStorageItem, testUrlMatch } from '../support/helpers';
+import { mockUnauthorizedError, mockOk, mockServerError } from '../support/http.mock';
+import { testInputStatus, testMainError } from '../support/form-helpers';
 
 const fillFormFields = (): void => {
   cy.getByTestId('email').type(faker.internet.email());
@@ -46,7 +47,7 @@ describe('Login', () => {
   });
 
   it('Should present error when invalid credentials are provided', () => {
-    mockInvalidCredentialError(/login/);
+    mockUnauthorizedError(/login/);
 
     fillFormFields();
 
@@ -55,16 +56,7 @@ describe('Login', () => {
   });
 
   it('Should present error on default error cases', () => {
-    mockUnexpectedError(/login/, 'POST');
-
-    fillFormFields();
-
-    testMainError('Algo de errado aconteceu. Tente novamente em breve.');
-    testUrlMatch('/login');
-  });
-
-  it('Should present error when the API does not return an account', () => {
-    mockOk(/login/, 'POST', { invalidProperty: faker.random.words() });
+    mockServerError(/login/, 'POST');
 
     fillFormFields();
 

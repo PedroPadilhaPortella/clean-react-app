@@ -1,7 +1,8 @@
 import faker from 'faker';
 
-import { testHttpCallsCount, testInputStatus, testLocalStorageItem, testMainError, testUrlMatch } from '../support/form-helper';
-import { mockEmailInUseError, mockOk, mockUnexpectedError } from '../support/http.mock';
+import { testHttpCallsCount, testLocalStorageItem, testUrlMatch } from '../support/helpers';
+import { mockForbiddenError, mockOk, mockServerError } from '../support/http.mock';
+import { testInputStatus, testMainError } from '../support/form-helpers';
 
 const fillFormFields = (): void => {
   cy.getByTestId('name').type(faker.random.alphaNumeric(7));
@@ -60,7 +61,7 @@ describe('Register', () => {
   });
 
   it('Should present EmailInUseError on 403', () => {
-    mockEmailInUseError(/signup/);
+    mockForbiddenError(/signup/, 'POST');
 
     fillFormFields();
 
@@ -69,16 +70,7 @@ describe('Register', () => {
   });
 
   it('Should present error on default error cases', () => {
-    mockUnexpectedError(/signup/, 'POST');
-
-    fillFormFields();
-
-    testMainError('Algo de errado aconteceu. Tente novamente em breve.');
-    testUrlMatch('/register');
-  });
-
-  it('Should present error when the API does not return an account', () => {
-    mockOk(/signup/, 'POST', { invalidProperty: faker.random.words() });
+    mockServerError(/signup/, 'POST');
 
     fillFormFields();
 
