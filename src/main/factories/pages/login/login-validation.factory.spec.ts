@@ -1,13 +1,14 @@
-import { ValidationBuilder } from '@/validation/validators/builder/validation.builder';
+import { EmailValidation, MinLengthValidation, RequiredFieldValidation, ValidationComposite } from '@/validation/validators';
 import { loginValidationFactory } from './login-validation.factory';
-import { ValidationComposite } from '@/validation/validators';
 
 describe('LoginValidationFactory', () => {
   test('Should create ValidationComposite with correct validations', () => {
     const composite = loginValidationFactory();
     expect(composite).toEqual(ValidationComposite.build([
-      ...ValidationBuilder.field('email').required().email().build(),
-      ...ValidationBuilder.field('password').required().minLength(5).build()
+      new RequiredFieldValidation('email'),
+      new EmailValidation('email'),
+      new RequiredFieldValidation('password'),
+      new MinLengthValidation('password', 5)
     ]));
   });
 });
