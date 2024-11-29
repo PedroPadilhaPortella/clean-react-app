@@ -1,9 +1,9 @@
-import { HttpGetClient, HttpGetParams, HttpResponse, Storage } from '@/data/protocols';
+import { HttpGetClient, HttpGetParams, HttpResponse, GetStorage } from '@/data/protocols';
 
 export class AuthorizeHttpGetClientDecorator implements HttpGetClient {
 
   constructor(
-    private readonly getStorage: Storage,
+    private readonly getStorage: GetStorage,
     private readonly httpGetClient: HttpGetClient
   ) { }
 
