@@ -1,7 +1,7 @@
 import faker from 'faker';
 
 import { getLocalStorageItem, setLocalStorageItem, testUrlMatch } from '../utils/helpers';
-import { mockForbiddenError, mockServerError } from '../utils/http.mock';
+import { mockForbiddenError, mockOk, mockServerError } from '../utils/http.mock';
 
 describe('SurveyList', () => {
 
@@ -36,5 +36,35 @@ describe('SurveyList', () => {
     cy.visit('');
     cy.getByTestId('logout').click();
     testUrlMatch('/login');
+  });
+
+  it('Should present survey items', () => {
+    mockOk(/surveys/, 'GET', 'fx:survey-list');
+    cy.visit('');
+
+    cy.get('li:empty').should('have.length', 4);
+    cy.get('li:not(empty)').should('have.length', 2);
+
+    cy.get('li:nth-child(1)').then(li => {
+      assert.equal(li.find('[data-testid="day"]').text(), '03');
+      assert.equal(li.find('[data-testid="month"]').text(), 'fev');
+      assert.equal(li.find('[data-testid="year"]').text(), '2018');
+      assert.equal(li.find('[data-testid="question"]').text(), 'Question 1');
+
+      cy.fixture('icons').then(icon => {
+        assert.equal(li.find('[data-testid="icon"]').attr('src'), icon.thumbUp);
+      });
+    });
+
+    cy.get('li:nth-child(2)').then(li => {
+      assert.equal(li.find('[data-testid="day"]').text(), '20');
+      assert.equal(li.find('[data-testid="month"]').text(), 'out');
+      assert.equal(li.find('[data-testid="year"]').text(), '2020');
+      assert.equal(li.find('[data-testid="question"]').text(), 'Question 2');
+
+      cy.fixture('icons').then(icon => {
+        assert.equal(li.find('[data-testid="icon"]').attr('src'), icon.thumbDown);
+      });
+    });
   });
 });
