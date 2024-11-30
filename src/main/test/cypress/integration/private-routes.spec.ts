@@ -1,4 +1,4 @@
-import { testUrlMatch } from '../support/helpers';
+import { testUrlMatch } from '../utils/helpers';
 
 describe('Private Routes', () => {
 

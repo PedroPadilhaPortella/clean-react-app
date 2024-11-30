@@ -1,9 +1,9 @@
 import faker from 'faker';
 
-import { getLocalStorageItem, setLocalStorageItem, testUrlMatch } from '../support/helpers';
-import { mockForbiddenError, mockServerError } from '../support/http.mock';
+import { getLocalStorageItem, setLocalStorageItem, testUrlMatch } from '../utils/helpers';
+import { mockForbiddenError, mockServerError } from '../utils/http.mock';
 
-describe('Login', () => {
+describe('SurveyList', () => {
 
   beforeEach(() => {
     setLocalStorageItem(

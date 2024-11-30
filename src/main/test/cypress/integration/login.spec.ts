@@ -1,8 +1,8 @@
 import faker from 'faker';
 
-import { testHttpCallsCount, testLocalStorageItem, testUrlMatch } from '../support/helpers';
-import { mockUnauthorizedError, mockOk, mockServerError } from '../support/http.mock';
-import { testInputStatus, testMainError } from '../support/form-helpers';
+import { testHttpCallsCount, testLocalStorageItem, testUrlMatch } from '../utils/helpers';
+import { mockUnauthorizedError, mockOk, mockServerError } from '../utils/http.mock';
+import { testInputStatus, testMainError } from '../utils/form-helpers';
 
 const fillFormFields = (): void => {
   cy.getByTestId('email').type(faker.internet.email());
@@ -65,7 +65,7 @@ describe('Login', () => {
   });
 
   it('Should present update currentAccount when valid credentials are provided', () => {
-    mockOk(/login/, 'POST', { accessToken: faker.random.uuid(), name: faker.name.findName() });
+    mockOk(/login/, 'POST', 'fx:account');
 
     fillFormFields();
 
@@ -76,7 +76,7 @@ describe('Login', () => {
   });
 
   it('Should prevent multiple submits', () => {
-    mockOk(/login/, 'POST', { accessToken: faker.random.uuid(), name: faker.name.findName() });
+    mockOk(/login/, 'POST', 'fx:account');
 
     cy.getByTestId('email').type(faker.internet.email());
     cy.getByTestId('password').type(faker.random.alphaNumeric(6));
@@ -86,7 +86,7 @@ describe('Login', () => {
   });
 
   it('Should not call submit when form is invalid', () => {
-    mockOk(/login/, 'POST', { accessToken: faker.random.uuid(), name: faker.name.findName() });
+    mockOk(/login/, 'POST', 'fx:account');
 
     cy.getByTestId('email').type(faker.internet.email()).type('{enter}');
 
