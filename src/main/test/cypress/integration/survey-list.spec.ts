@@ -67,4 +67,13 @@ describe('SurveyList', () => {
       });
     });
   });
+
+  it('Should reload on button click', () => {
+    mockServerError(/surveys/, 'GET');
+    cy.visit('');
+    cy.getByTestId('error').should('contain.text', 'Algo de errado aconteceu. Tente novamente em breve.');
+    mockOk(/surveys/, 'GET', 'fx:survey-list');
+    cy.getByTestId('reload').click();
+    cy.get('li:not(empty)').should('have.length', 2);
+  });
 });
