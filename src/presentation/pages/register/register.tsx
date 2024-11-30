@@ -64,7 +64,7 @@ const Register: React.FC<Props> = ({ validation, registerAccount }: Props) => {
         password: state.password,
         passwordConfirmation: state.passwordConfirm
       });
-      await setCurrentAccount(account);
+      setCurrentAccount(account);
       history.replace('/');
     } catch (error) {
       setState({ ...state, isLoading: false, mainError: error.message });
