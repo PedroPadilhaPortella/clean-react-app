@@ -1,18 +1,18 @@
 import faker from 'faker';
 
-import { HttpGetClientSpy, mockRemoteSurveyListModel } from '@/data/test';
-import { AccessDeniedError, UnexpectedError } from '@/domain/errors';
-import { RemoteLoadSurveyList } from './remote-load-survey-list';
+import { HttpGetClientSpy, mockRemoteSurveyResultModel } from '@/data/test';
+import { RemoteLoadSurveyResult } from './remote-load-survey-result';
 import { HttpStatusCode } from '@/data/protocols';
+import { AccessDeniedError, UnexpectedError } from '@/domain/errors';
 
 type SutTypes = {
-  sut: RemoteLoadSurveyList
-  httpGetClientSpy: HttpGetClientSpy<RemoteLoadSurveyList.Model[]>
+  sut: RemoteLoadSurveyResult
+  httpGetClientSpy: HttpGetClientSpy<RemoteLoadSurveyResult.Model>
 };
 
 const createSut = (url: string = faker.internet.url()): SutTypes => {
-  const httpGetClientSpy = new HttpGetClientSpy<RemoteLoadSurveyList.Model[]>();
-  const sut = new RemoteLoadSurveyList(url, httpGetClientSpy);
+  const httpGetClientSpy = new HttpGetClientSpy<RemoteLoadSurveyResult.Model>();
+  const sut = new RemoteLoadSurveyResult(url, httpGetClientSpy);
   return { sut, httpGetClientSpy };
 };
 
@@ -21,6 +21,8 @@ describe('RemoteLoadSurveyList', () => {
   test('Should call HttpGetClient with correct URL', async () => {
     const url = faker.internet.url();
     const { sut, httpGetClientSpy } = createSut(url);
+    httpGetClientSpy.response = { statusCode: HttpStatusCode.OK, body: mockRemoteSurveyResultModel() };
+
     await sut.load();
     expect(httpGetClientSpy.url).toBe(url);
   });
@@ -46,18 +48,24 @@ describe('RemoteLoadSurveyList', () => {
     await expect(promise).rejects.toThrow(new UnexpectedError());
   });
 
-  test('Should return a list of SurveyModels when HttpGetClient returns 200', async () => {
+  test('Should return a SurveyResult when HttpGetClient returns 200', async () => {
     const { sut, httpGetClientSpy } = createSut();
-    const httpResult = mockRemoteSurveyListModel();
+    const httpResult = mockRemoteSurveyResultModel();
+
     httpGetClientSpy.response = { statusCode: HttpStatusCode.OK, body: httpResult };
     const response = await sut.load();
-    expect(response).toEqual(httpResult);
+
+    expect(response).toEqual({
+      question: httpResult.question,
+      answers: httpResult.answers,
+      date: new Date(httpResult.date)
+    });
   });
 
-  test('Should return an empty list when HttpGetClient returns 204', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    httpGetClientSpy.response = { statusCode: HttpStatusCode.NO_CONTENT };
-    const response = await sut.load();
-    expect(response).toEqual([]);
-  });
+  // test('Should return an empty list when HttpPostClient returns 204', async () => {
+  //   const { sut, httpGetClientSpy } = createSut();
+  //   httpGetClientSpy.response = { statusCode: HttpStatusCode.NO_CONTENT };
+  //   const response = await sut.load();
+  //   expect(response).toEqual([]);
+  // });
 });
