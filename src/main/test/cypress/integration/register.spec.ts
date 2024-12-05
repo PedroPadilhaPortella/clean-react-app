@@ -99,6 +99,7 @@ describe('Register', () => {
     cy.getByTestId('passwordConfirm').type(password);
     cy.getByTestId('submit').dblclick();
 
+    cy.wait('@request');
     testHttpCallsCount(1);
   });
 

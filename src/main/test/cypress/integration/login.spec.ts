@@ -82,6 +82,7 @@ describe('Login', () => {
     cy.getByTestId('password').type(faker.random.alphaNumeric(6));
     cy.getByTestId('submit').dblclick();
 
+    cy.wait('@request');
     testHttpCallsCount(1);
   });
 
