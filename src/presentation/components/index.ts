@@ -3,6 +3,7 @@ export { default as FormStatus } from './form-status';
 export { default as Header } from './header';
 export { default as Icon, IconName } from './icon/icon';
 export { default as Input } from './input';
+export { default as Loading } from './loading';
 export { default as LoginHeader } from './login-header';
 export { default as Logo } from './logo';
 export { default as Spinner } from './spinner';
