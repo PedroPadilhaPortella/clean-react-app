@@ -52,7 +52,7 @@ const Register: React.FC<Props> = ({ validation, registerAccount }: Props) => {
     try {
       if (state.isLoading || state.isFormInvalid) return;
 
-      setState({ ...state, isLoading: true });
+      setState(old => ({ ...old, isLoading: true }));
       const account = await registerAccount.register({
         name: state.name,
         email: state.email,
@@ -62,7 +62,7 @@ const Register: React.FC<Props> = ({ validation, registerAccount }: Props) => {
       setCurrentAccount(account);
       history.replace('/');
     } catch (error) {
-      setState({ ...state, isLoading: false, mainError: error.message });
+      setState(old => ({ ...old, isLoading: false, mainError: error.message }));
     }
   };
 
