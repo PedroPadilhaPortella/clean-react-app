@@ -12,23 +12,23 @@ type Props = {
 };
 
 const SurveyList: React.FC<Props> = ({ loadSurveyList }: Props) => {
-  const errorHandler = useErrorHandler((error: Error) => {
-    setState(old => ({ ...old, error: error.message, reload: false }));
-  });
-
-  const reload = (): void => setState((old) => ({ surveys: [], error: '', reload: !old.reload }));
-
   const [state, setState] = useState({
     surveys: [] as LoadSurveyList.Model[],
     error: '',
     reload: false
   });
 
+  const errorHandler = useErrorHandler((error: Error) => {
+    setState(old => ({ ...old, error: error.message, reload: false }));
+  });
+
+  const reload = (): void => setState((old) => ({ surveys: [], error: '', reload: !old.reload }));
+
   useEffect(() => {
     (async function () {
       await loadSurveyList.load()
         .then((surveys) => setState(old => ({ ...old, surveys })))
-        .catch((error) => errorHandler(error));
+        .catch(errorHandler);
     })();
   }, [state.reload]);
 
