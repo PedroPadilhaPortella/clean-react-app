@@ -82,8 +82,7 @@ describe('SurveyList Component', () => {
 
   test('Should call LoadSurveyList on reload', async () => {
     const loadSurveyListSpy = new LoadSurveyListSpy();
-    const error = new UnexpectedError();
-    jest.spyOn(loadSurveyListSpy, 'load').mockRejectedValueOnce(error);
+    jest.spyOn(loadSurveyListSpy, 'load').mockRejectedValueOnce(new UnexpectedError());
     createSut(loadSurveyListSpy);
 
     await waitFor(() => screen.getByRole('heading'));
