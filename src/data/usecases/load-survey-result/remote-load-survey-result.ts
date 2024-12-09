@@ -1,5 +1,5 @@
 import { AccessDeniedError, UnexpectedError } from '@/domain/errors';
-import { HttpGetClient, HttpStatusCode } from '@/data/protocols';
+import { HttpClient, HttpStatusCode } from '@/data/protocols';
 import { LoadSurveyResult } from '@/domain/usecases';
 
 export namespace RemoteLoadSurveyResult {
@@ -20,11 +20,11 @@ export class RemoteLoadSurveyResult implements LoadSurveyResult {
 
   constructor(
     private readonly url: string,
-    private readonly httpGetClient: HttpGetClient<RemoteLoadSurveyResult.Model>
+    private readonly httpClient: HttpClient<RemoteLoadSurveyResult.Model>
   ) { }
 
   async load(): Promise<LoadSurveyResult.Model> {
-    const response = await this.httpGetClient.get({ url: this.url });
+    const response = await this.httpClient.request({ url: this.url, method: 'GET' });
     const surveyResult = response.body;
 
     switch (response.statusCode) {

@@ -1,5 +1,5 @@
 import { RegisterAccount } from '@/domain/usecases';
-import { HttpPostClient, HttpStatusCode } from '@/data/protocols';
+import { HttpClient, HttpStatusCode } from '@/data/protocols';
 import { EmailInUseError, UnexpectedError } from '@/domain/errors';
 import { AccountModel } from '@/domain/models';
 
@@ -11,11 +11,11 @@ export class RemoteRegisterAccount implements RegisterAccount {
 
   constructor(
     private readonly url: string,
-    private readonly httpPostClient: HttpPostClient<RemoteRegisterAccount.Model>
+    private readonly httpClient: HttpClient<RemoteRegisterAccount.Model>
   ) { }
 
   async register(params: RegisterAccount.Params): Promise<RegisterAccount.Model> {
-    const response = await this.httpPostClient.post({ url: this.url, body: params });
+    const response = await this.httpClient.request({ url: this.url, method: 'POST', body: params });
     switch (response.statusCode) {
       case HttpStatusCode.OK: return response.body;
       case HttpStatusCode.FORBIDDEN: throw new EmailInUseError();

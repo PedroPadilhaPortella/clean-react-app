@@ -1,62 +1,63 @@
 import faker from 'faker';
 
-import { HttpGetClientSpy, mockRemoteSurveyListModel } from '@/data/test';
+import { HttpClientSpy, mockRemoteSurveyListModel } from '@/data/test';
 import { AccessDeniedError, UnexpectedError } from '@/domain/errors';
 import { RemoteLoadSurveyList } from './remote-load-survey-list';
 import { HttpStatusCode } from '@/data/protocols';
 
 type SutTypes = {
   sut: RemoteLoadSurveyList
-  httpGetClientSpy: HttpGetClientSpy<RemoteLoadSurveyList.Model[]>
+  httpClientSpy: HttpClientSpy<RemoteLoadSurveyList.Model[]>
 };
 
 const createSut = (url: string = faker.internet.url()): SutTypes => {
-  const httpGetClientSpy = new HttpGetClientSpy<RemoteLoadSurveyList.Model[]>();
-  const sut = new RemoteLoadSurveyList(url, httpGetClientSpy);
-  return { sut, httpGetClientSpy };
+  const httpClientSpy = new HttpClientSpy<RemoteLoadSurveyList.Model[]>();
+  const sut = new RemoteLoadSurveyList(url, httpClientSpy);
+  return { sut, httpClientSpy };
 };
 
 describe('RemoteLoadSurveyList', () => {
 
-  test('Should call HttpGetClient with correct URL', async () => {
+  test('Should call HttpClient with correct URL and method', async () => {
     const url = faker.internet.url();
-    const { sut, httpGetClientSpy } = createSut(url);
+    const { sut, httpClientSpy } = createSut(url);
     await sut.load();
-    expect(httpGetClientSpy.url).toBe(url);
+    expect(httpClientSpy.url).toBe(url);
+    expect(httpClientSpy.method).toBe('GET');
   });
 
-  test('Should throw AccessDeniedError when HttpGetClient returns 403', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    httpGetClientSpy.response = { statusCode: HttpStatusCode.FORBIDDEN };
+  test('Should throw AccessDeniedError when HttpClient returns 403', async () => {
+    const { sut, httpClientSpy } = createSut();
+    httpClientSpy.response = { statusCode: HttpStatusCode.FORBIDDEN };
     const promise = sut.load();
     await expect(promise).rejects.toThrow(new AccessDeniedError());
   });
 
-  test('Should throw UnexpectedError when HttpGetClient returns 404', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    httpGetClientSpy.response = { statusCode: HttpStatusCode.NOT_FOUND };
+  test('Should throw UnexpectedError when HttpClient returns 404', async () => {
+    const { sut, httpClientSpy } = createSut();
+    httpClientSpy.response = { statusCode: HttpStatusCode.NOT_FOUND };
     const promise = sut.load();
     await expect(promise).rejects.toThrow(new UnexpectedError());
   });
 
-  test('Should throw UnexpectedError when HttpGetClient returns 500', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    httpGetClientSpy.response = { statusCode: HttpStatusCode.SERVER_ERROR };
+  test('Should throw UnexpectedError when HttpClient returns 500', async () => {
+    const { sut, httpClientSpy } = createSut();
+    httpClientSpy.response = { statusCode: HttpStatusCode.SERVER_ERROR };
     const promise = sut.load();
     await expect(promise).rejects.toThrow(new UnexpectedError());
   });
 
-  test('Should return a list of SurveyModels when HttpGetClient returns 200', async () => {
-    const { sut, httpGetClientSpy } = createSut();
+  test('Should return a list of SurveyModels when HttpClient returns 200', async () => {
+    const { sut, httpClientSpy } = createSut();
     const httpResult = mockRemoteSurveyListModel();
-    httpGetClientSpy.response = { statusCode: HttpStatusCode.OK, body: httpResult };
+    httpClientSpy.response = { statusCode: HttpStatusCode.OK, body: httpResult };
     const response = await sut.load();
     expect(response).toEqual(httpResult);
   });
 
-  test('Should return an empty list when HttpGetClient returns 204', async () => {
-    const { sut, httpGetClientSpy } = createSut();
-    httpGetClientSpy.response = { statusCode: HttpStatusCode.NO_CONTENT };
+  test('Should return an empty list when HttpClient returns 204', async () => {
+    const { sut, httpClientSpy } = createSut();
+    httpClientSpy.response = { statusCode: HttpStatusCode.NO_CONTENT };
     const response = await sut.load();
     expect(response).toEqual([]);
   });

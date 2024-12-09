@@ -1,5 +1,3 @@
-export { HttpPostClient, HttpPostParams } from './http/http-post-client';
-export { HttpGetClient, HttpGetParams } from './http/http-get-client';
-export { HttpResponse, HttpStatusCode } from './http/http-response.types';
+export { HttpClient, HttpMethod, HttpRequest, HttpResponse, HttpStatusCode } from './http/http-client';
 export { GetStorage } from './cache/get-storage';
 export { SetStorage } from './cache/set-storage';

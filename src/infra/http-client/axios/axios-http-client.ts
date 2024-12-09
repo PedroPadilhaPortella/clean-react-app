@@ -1,34 +1,23 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { HttpGetClient, HttpGetParams, HttpPostClient, HttpPostParams, HttpResponse } from '@/data/protocols';
+import { HttpClient, HttpRequest, HttpResponse } from '@/data/protocols';
 
-export class AxiosHttpClient implements HttpPostClient, HttpGetClient {
-  async post(params: HttpPostParams): Promise<HttpResponse<any>> {
+export class AxiosHttpClient implements HttpClient {
+  async request(data: HttpRequest): Promise<HttpResponse<any>> {
 
     let response: AxiosResponse<any>;
 
     try {
-      response = await axios.post(params.url, params.body);
+      response = await axios.request({
+        url: data.url,
+        method: data.method,
+        headers: data.headers,
+        data: data.body
+      });
     } catch (error) {
       response = error.response;
     }
 
-    return this.adapt(response);
-  }
-
-  async get(params: HttpGetParams): Promise<HttpResponse<any>> {
-    let response: AxiosResponse<any>;
-
-    try {
-      response = await axios.get(params.url, { headers: params.headers });
-    } catch (error) {
-      response = error.response;
-    }
-
-    return this.adapt(response);
-  }
-
-  private adapt(response: AxiosResponse): HttpResponse {
     return { statusCode: response.status, body: response.data };
   }
 }
