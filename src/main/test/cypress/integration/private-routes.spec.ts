@@ -6,4 +6,9 @@ describe('Private Routes', () => {
     cy.visit('');
     testUrlMatch('/login');
   });
+
+  it('Should logout when surveyResult has no token', () => {
+    cy.visit('/surveys/any_id');
+    testUrlMatch('/login');
+  });
 });
