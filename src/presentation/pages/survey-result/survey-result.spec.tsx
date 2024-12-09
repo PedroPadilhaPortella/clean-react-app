@@ -17,7 +17,7 @@ type SutTypes = {
 };
 
 const createSut = (loadSurveyResultSpy = new LoadSurveyResultSpy()): SutTypes => {
-  const history = createMemoryHistory({ initialEntries: ['/'] });
+  const history = createMemoryHistory({ initialEntries: ['/', '/surveys/id'], initialIndex: 1 });
   const setCurrentAccountMock = jest.fn();
 
   render(
@@ -117,5 +117,14 @@ describe('SurveyResult Component', () => {
 
     expect(loadSurveyResultSpy.callsCount).toBe(1);
     await waitFor(() => screen.getByTestId('survey-result'));
+  });
+
+  test('Should go to SurveyList on backButton click', async () => {
+    const { history } = createSut();
+
+    await waitFor(() => screen.getByTestId('survey-result'));
+
+    fireEvent.click(screen.getByTestId('back-button'));
+    expect(history.location.pathname).toBe('/');
   });
 });
