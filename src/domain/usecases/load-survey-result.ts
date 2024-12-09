@@ -1,15 +1,7 @@
+import { SurveyResultModel } from '@/domain/models';
+
 export namespace LoadSurveyResult {
-  export type Model = {
-    question: string
-    date: Date
-    answers: Array<{
-      image?: string
-      answer: string
-      count: number
-      percent: number
-      isCurrentAccountAnswer: boolean
-    }>
-  };
+  export type Model = SurveyResultModel;
 }
 
 export interface LoadSurveyResult {
