@@ -18,18 +18,13 @@ const createSut = (url: string = faker.internet.url()): SutTypes => {
 };
 
 describe('RemoteRegisterAccount', () => {
-  test('Should call HttpClient with correct URL and method', async () => {
+  test('Should call HttpClient with correct URL, method and body', async () => {
     const url = 'http://localhost:5000/api/login';
+    const registerParams = mockRegisterParams();
     const { sut, httpClientSpy } = createSut(url);
-    await sut.register(mockRegisterParams());
+    await sut.register(registerParams);
     expect(httpClientSpy.url).toBe(url);
     expect(httpClientSpy.method).toBe('POST');
-  });
-
-  test('Should call HttpClient with correct body', async () => {
-    const { sut, httpClientSpy } = createSut();
-    const registerParams = mockRegisterParams();
-    await sut.register(registerParams);
     expect(httpClientSpy.body).toEqual(registerParams);
   });
 
