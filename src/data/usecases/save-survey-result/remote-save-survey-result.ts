@@ -1,21 +1,21 @@
 import { AccessDeniedError, UnexpectedError } from '@/domain/errors';
 import { HttpClient, HttpStatusCode } from '@/data/protocols';
 import { RemoteSurveyResultModel } from '@/data/models';
-import { LoadSurveyResult } from '@/domain/usecases';
+import { SaveSurveyResult } from '@/domain/usecases';
 
-export namespace RemoteLoadSurveyResult {
+export namespace RemoteSaveSurveyResult {
   export type Model = RemoteSurveyResultModel;
 }
 
-export class RemoteLoadSurveyResult implements LoadSurveyResult {
+export class RemoteSaveSurveyResult implements SaveSurveyResult {
 
   constructor(
     private readonly url: string,
-    private readonly httpClient: HttpClient<RemoteLoadSurveyResult.Model>
+    private readonly httpClient: HttpClient<RemoteSaveSurveyResult.Model>
   ) { }
 
-  async load(): Promise<LoadSurveyResult.Model> {
-    const response = await this.httpClient.request({ url: this.url, method: 'GET' });
+  async save(params: SaveSurveyResult.Params): Promise<SaveSurveyResult.Model> {
+    const response = await this.httpClient.request({ url: this.url, method: 'PUT', body: params });
     const surveyResult = response.body;
 
     switch (response.statusCode) {
