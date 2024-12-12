@@ -3,3 +3,4 @@ export { remoteRegisterAccountFactory } from './register-account/remote-authenti
 export { localStorageAdapterFactory } from './cache/local-storage-adapter.factory';
 export { remoteLoadSurveyListFactory } from './load-survey-list/remote-load-survey-list.factory';
 export { remoteLoadSurveyResultFactory } from './load-survey-result/remote-load-survey-result.factory';
+export { remoteSaveSurveyResultFactory } from './save-survey-result/remote-save-survey-result-factory';

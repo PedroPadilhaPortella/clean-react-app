@@ -4,7 +4,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory, MemoryHistory } from 'history';
 
 import { AccessDeniedError, UnexpectedError } from '@/domain/errors';
-import { LoadSurveyResultSpy, mockAccountModel, mockSurveyResultModel } from '@/domain/test';
+import { LoadSurveyResultSpy, mockAccountModel, mockSurveyResultModel, SaveSurveyResultSpy } from '@/domain/test';
 import { ApiContext } from '@/presentation/contexts';
 import { SurveyResult } from '@/presentation/pages';
 import { Router } from 'react-router';
@@ -12,11 +12,20 @@ import { AccountModel } from '@/domain/models';
 
 type SutTypes = {
   loadSurveyResultSpy: LoadSurveyResultSpy
+  saveSurveyResultSpy: SaveSurveyResultSpy
   history: MemoryHistory
   setCurrentAccountMock: (account: AccountModel) => void
 };
 
-const createSut = (loadSurveyResultSpy = new LoadSurveyResultSpy()): SutTypes => {
+type SutParams = {
+  loadSurveyResultSpy?: LoadSurveyResultSpy
+  saveSurveyResultSpy?: SaveSurveyResultSpy
+};
+
+const createSut = ({
+  loadSurveyResultSpy = new LoadSurveyResultSpy(),
+  saveSurveyResultSpy = new SaveSurveyResultSpy()
+}: SutParams = {}): SutTypes => {
   const history = createMemoryHistory({ initialEntries: ['/', '/surveys/id'], initialIndex: 1 });
   const setCurrentAccountMock = jest.fn();
 
@@ -26,12 +35,12 @@ const createSut = (loadSurveyResultSpy = new LoadSurveyResultSpy()): SutTypes =>
       getCurrentAccount: () => mockAccountModel()
     }}>
       <Router history={history}>
-        <SurveyResult loadSurveyResult={loadSurveyResultSpy} />
+        <SurveyResult loadSurveyResult={loadSurveyResultSpy} saveSurveyResult={saveSurveyResultSpy} />
       </Router>
     </ ApiContext.Provider>
   );
 
-  return { loadSurveyResultSpy, history, setCurrentAccountMock };
+  return { loadSurveyResultSpy, saveSurveyResultSpy, history, setCurrentAccountMock };
 };
 
 describe('SurveyResult Component', () => {
@@ -55,7 +64,7 @@ describe('SurveyResult Component', () => {
     const surveyResult = Object
       .assign(mockSurveyResultModel(), { date: new Date('2020-01-10T00:00:00') });
     loadSurveyResultSpy.surveyResult = surveyResult;
-    createSut(loadSurveyResultSpy);
+    createSut({ loadSurveyResultSpy });
 
     await waitFor(() => screen.getByTestId('survey-result'));
 
@@ -87,7 +96,7 @@ describe('SurveyResult Component', () => {
     const loadSurveyResultSpy = new LoadSurveyResultSpy();
     const error = new UnexpectedError();
     jest.spyOn(loadSurveyResultSpy, 'load').mockRejectedValueOnce(error);
-    createSut(loadSurveyResultSpy);
+    createSut({ loadSurveyResultSpy });
 
     await waitFor(() => screen.getByTestId('survey-result'));
 
@@ -99,7 +108,7 @@ describe('SurveyResult Component', () => {
   test('Should logout on AccessDeniedError', async () => {
     const loadSurveyResultSpy = new LoadSurveyResultSpy();
     jest.spyOn(loadSurveyResultSpy, 'load').mockRejectedValueOnce(new AccessDeniedError());
-    const { setCurrentAccountMock, history } = createSut(loadSurveyResultSpy);
+    const { setCurrentAccountMock, history } = createSut({ loadSurveyResultSpy });
 
     await waitFor(() => screen.getByTestId('survey-result'));
 
@@ -110,7 +119,7 @@ describe('SurveyResult Component', () => {
   test('Should call LoadSurveyList on reload', async () => {
     const loadSurveyResultSpy = new LoadSurveyResultSpy();
     jest.spyOn(loadSurveyResultSpy, 'load').mockRejectedValueOnce(new UnexpectedError());
-    createSut(loadSurveyResultSpy);
+    createSut({ loadSurveyResultSpy });
 
     await waitFor(() => screen.getByTestId('survey-result'));
     fireEvent.click(screen.getByTestId('reload'));
@@ -119,12 +128,26 @@ describe('SurveyResult Component', () => {
     await waitFor(() => screen.getByTestId('survey-result'));
   });
 
-  test('Should go to SurveyList on backButton click', async () => {
-    const { history } = createSut();
+  test('Should not present Loading on active answer click', async () => {
+    createSut();
+    await waitFor(() => screen.getByTestId('survey-result'));
+    const answersWrap = screen.queryAllByTestId('answer-wrap');
+
+    fireEvent.click(answersWrap[0]);
+    expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+  });
+
+  test('Should call SaveSurveyResult on non active answer click', async () => {
+    const { loadSurveyResultSpy, saveSurveyResultSpy } = createSut();
+    await waitFor(() => screen.getByTestId('survey-result'));
+    const answersWrap = screen.queryAllByTestId('answer-wrap');
+
+    fireEvent.click(answersWrap[1]);
+    expect(screen.queryByTestId('loading')).toBeInTheDocument();
+    expect(saveSurveyResultSpy.params).toEqual({
+      answer: loadSurveyResultSpy.surveyResult.answers[1].answer
+    });
 
     await waitFor(() => screen.getByTestId('survey-result'));
-
-    fireEvent.click(screen.getByTestId('back-button'));
-    expect(history.location.pathname).toBe('/');
   });
 });
