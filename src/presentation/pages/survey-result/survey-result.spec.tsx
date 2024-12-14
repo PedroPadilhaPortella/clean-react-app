@@ -2,12 +2,13 @@ import React from 'react';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory, MemoryHistory } from 'history';
+import { Router } from 'react-router';
+import { RecoilRoot } from 'recoil';
 
-import { AccessDeniedError, UnexpectedError } from '@/domain/errors';
 import { LoadSurveyResultSpy, mockAccountModel, mockSurveyResultModel, SaveSurveyResultSpy } from '@/domain/test';
+import { AccessDeniedError, UnexpectedError } from '@/domain/errors';
 import { ApiContext } from '@/presentation/contexts';
 import { SurveyResult } from '@/presentation/pages';
-import { Router } from 'react-router';
 import { AccountModel } from '@/domain/models';
 
 type SutTypes = {
@@ -30,14 +31,16 @@ const createSut = ({
   const setCurrentAccountMock = jest.fn();
 
   render(
-    <ApiContext.Provider value={{
-      setCurrentAccount: setCurrentAccountMock,
-      getCurrentAccount: () => mockAccountModel()
-    }}>
-      <Router history={history}>
-        <SurveyResult loadSurveyResult={loadSurveyResultSpy} saveSurveyResult={saveSurveyResultSpy} />
-      </Router>
-    </ ApiContext.Provider>
+    <RecoilRoot>
+      <ApiContext.Provider value={{
+        setCurrentAccount: setCurrentAccountMock,
+        getCurrentAccount: () => mockAccountModel()
+      }}>
+        <Router history={history}>
+          <SurveyResult loadSurveyResult={loadSurveyResultSpy} saveSurveyResult={saveSurveyResultSpy} />
+        </Router>
+      </ ApiContext.Provider>
+    </RecoilRoot>
   );
 
   return { loadSurveyResultSpy, saveSurveyResultSpy, history, setCurrentAccountMock };
@@ -227,6 +230,7 @@ describe('SurveyResult Component', () => {
     await waitFor(() => screen.getByTestId('survey-result'));
     const answersWrap = screen.queryAllByTestId('answer-wrap');
     fireEvent.click(answersWrap[1]);
+    await waitFor(() => screen.getByTestId('survey-result'));
     fireEvent.click(answersWrap[1]);
     await waitFor(() => screen.getByTestId('survey-result'));
 

@@ -4,7 +4,6 @@ Projeto de Enquete para Programadores desenvolvido em React durante o curso de R
 
 #### [Link para a repositório da API (Clean Node API)](https://github.com/PedroPadilhaPortella/clean-node-api)
 
-
 > ### Princípios Aplicados
 * Single Responsibility Principle (SRP)
 * Open Closed Principle (OCP)
@@ -24,62 +23,3 @@ Projeto de Enquete para Programadores desenvolvido em React durante o curso de R
 * Dependency Injection
 * Abstract Server
 * Composition Root
-> ## Metodologias e Designs Seguidos
-* TDD
-* Clean Architecture
-* DDD
-* Conventional Commits
-* GitFlow
-* Modular Design
-* Dependency Diagrams
-* Use Cases
-* Continuous Integration
-* Continuous Delivery
-* Continuous Deployment
-> ## Bibliotecas e Ferramentas Utilizadas
-* React
-* Typescript
-* Git
-* Jest
-* Axios
-* Webpack
-* SASS
-* NPM
-* Travis CI
-* Faker
-* Coveralls
-* React Hooks
-* React Router
-* Husky
-* Lint Staged
-* Eslint
-* Standard Javascript Style
-> ## Features do React Utilizadas
-* React Testing Library
-* React Router
-* UseState
-* UseContext
-* UseEffect
-* UseHistory
-* Memo
-* Functional Components
-> ## Features do Typescript Utilizadas
-* POO Avançado
-* Interface
-* Type Alias
-* Utility Types
-* Modularização de Paths
-* Build
-* Deploy
-* Generics
-> ## Features de Testes Utilizadas
-* Testes Unitários
-* Testes de Integração
-* Testes e2e
-* Cobertura de Testes
-* Test Doubles
-* Mocks
-* Stubs
-* Spies
-* Fakes
-* Dummies

@@ -20,7 +20,8 @@
     "axios": "^0.19.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "recoil": "0.0.13"
   },
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^4.1.5",

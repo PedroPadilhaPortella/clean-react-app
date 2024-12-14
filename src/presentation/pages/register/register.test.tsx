@@ -1,7 +1,9 @@
 import React from 'react';
+
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import faker from 'faker';
 
 import { InvalidCredentialsError } from '@/domain/errors';
@@ -29,14 +31,16 @@ const createSut = (params?: SutParams): SutTypes => {
   validationStub.errorMessage = params?.validationError;
 
   render(
-    <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
-      <Router history={history}>
-        <Register
-          validation={validationStub}
-          registerAccount={registerAccountSpy}
-        />
-      </Router>
-    </ApiContext.Provider>
+    <RecoilRoot>
+      <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
+        <Router history={history}>
+          <Register
+            validation={validationStub}
+            registerAccount={registerAccountSpy}
+          />
+        </Router>
+      </ApiContext.Provider>
+    </RecoilRoot>
   );
 
   return { registerAccountSpy, setCurrentAccountMock };
