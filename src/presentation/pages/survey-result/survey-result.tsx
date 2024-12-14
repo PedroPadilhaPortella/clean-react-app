@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 
 import { onSurveyAnswerState, Result, surveyResultState } from '@/presentation/pages/survey-result/components';
 import { Error, Footer, Header, Loading } from '@/presentation/components';
@@ -16,6 +16,9 @@ type Props = {
 
 const SurveyResult: React.FC<Props> = ({ loadSurveyResult, saveSurveyResult }: Props) => {
   const [state, setState] = useRecoilState(surveyResultState);
+
+  const resetSurveyResultState = useResetRecoilState(surveyResultState);
+
   const setOnAnswer = useSetRecoilState(onSurveyAnswerState);
 
   const errorHandler = useErrorHandler((error: Error) => {
@@ -31,6 +34,8 @@ const SurveyResult: React.FC<Props> = ({ loadSurveyResult, saveSurveyResult }: P
       .then(surveyResult => setState(old => ({ ...old, isLoading: false, surveyResult })))
       .catch(errorHandler);
   };
+
+  useEffect(() => resetSurveyResultState(), []);
 
   useEffect(() => {
     setOnAnswer({ onAnswer });
