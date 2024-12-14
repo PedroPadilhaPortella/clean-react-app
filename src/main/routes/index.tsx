@@ -4,25 +4,24 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import { getCurrentAccountAdapter, setCurrentAccountAdapter } from '@/main/adapters/current-account.adapter';
 import { loginFactory, registerFactory, surveyListFactory, surveyResultFactory } from '@/main/factories/pages';
-import { ApiContext } from '@/presentation/contexts';
-import { PrivateRoute } from '@/presentation/components';
+import { currentAccountState, PrivateRoute } from '@/presentation/components';
 
 const Router: React.FC = () => {
+  const state = {
+    setCurrentAccount: setCurrentAccountAdapter,
+    getCurrentAccount: getCurrentAccountAdapter
+  };
+
   return (
-    <RecoilRoot>
-      <ApiContext.Provider value={{
-        setCurrentAccount: setCurrentAccountAdapter,
-        getCurrentAccount: getCurrentAccountAdapter
-      }}>
-        <BrowserRouter>
-          <Switch>
-            <Route path="/login" exact component={loginFactory} />
-            <Route path="/register" exact component={registerFactory} />
-            <PrivateRoute path="/" exact component={surveyListFactory} />
-            <PrivateRoute path="/surveys/:id" component={surveyResultFactory} />
-          </Switch>
-        </BrowserRouter>
-      </ApiContext.Provider>
+    <RecoilRoot initializeState={(snapshot) => snapshot.set(currentAccountState, state)}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/login" exact component={loginFactory} />
+          <Route path="/register" exact component={registerFactory} />
+          <PrivateRoute path="/" exact component={surveyListFactory} />
+          <PrivateRoute path="/surveys/:id" component={surveyResultFactory} />
+        </Switch>
+      </BrowserRouter>
     </RecoilRoot>
   );
 };

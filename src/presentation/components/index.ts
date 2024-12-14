@@ -11,3 +11,4 @@ export { default as Logo } from './logo';
 export { default as Spinner } from './spinner';
 export { default as SubmitButtonBase } from './submit-button';
 export { default as PrivateRoute } from './private-route/private-route';
+export * from './atoms/atoms';

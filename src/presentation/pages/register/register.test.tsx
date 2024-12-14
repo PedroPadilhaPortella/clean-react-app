@@ -6,11 +6,11 @@ import { Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import faker from 'faker';
 
+import { mockAccountModel, RegisterAccountSpy } from '@/domain/test';
+import { currentAccountState } from '@/presentation/components';
 import { InvalidCredentialsError } from '@/domain/errors';
 import { ValidationStub } from '@/presentation/test';
-import { ApiContext } from '@/presentation/contexts';
 import { RegisterAccount } from '@/domain/usecases';
-import { RegisterAccountSpy } from '@/domain/test';
 import { Register } from '@/presentation/pages';
 
 const history = createMemoryHistory({ initialEntries: ['/register'] });
@@ -30,16 +30,19 @@ const createSut = (params?: SutParams): SutTypes => {
   const setCurrentAccountMock = jest.fn();
   validationStub.errorMessage = params?.validationError;
 
+  const mockedState = {
+    setCurrentAccount: setCurrentAccountMock,
+    getCurrentAccount: () => mockAccountModel()
+  };
+
   render(
-    <RecoilRoot>
-      <ApiContext.Provider value={{ setCurrentAccount: setCurrentAccountMock }}>
-        <Router history={history}>
-          <Register
-            validation={validationStub}
-            registerAccount={registerAccountSpy}
-          />
-        </Router>
-      </ApiContext.Provider>
+    <RecoilRoot initializeState={({ set }) => set(currentAccountState, mockedState)}>
+      <Router history={history}>
+        <Register
+          validation={validationStub}
+          registerAccount={registerAccountSpy}
+        />
+      </Router>
     </RecoilRoot>
   );
 

@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { Logo } from '@/presentation/components';
-import { ApiContext } from '@/presentation/contexts';
+import { currentAccountState, Logo } from '@/presentation/components';
 
 import { useLogout } from '@/presentation/hooks';
 import styles from './header.module.scss';
+import { useRecoilValue } from 'recoil';
 
 const Header: React.FC = () => {
   const logout = useLogout();
-  const { getCurrentAccount } = useContext(ApiContext);
+  const { getCurrentAccount } = useRecoilValue(currentAccountState);
 
   const onLogout = (event: React.MouseEvent): void => {
     event.preventDefault();

@@ -1,11 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { FormStatus, Input, registerState, SubmitButton } from '@/presentation/pages/register/components';
 import { Validation } from '@/presentation/protocols/validation';
-import { Footer, LoginHeader } from '@/presentation/components';
-import { ApiContext } from '@/presentation/contexts';
+import { currentAccountState, Footer, LoginHeader } from '@/presentation/components';
 import { RegisterAccount } from '@/domain/usecases';
 
 import styles from './register.module.scss';
@@ -17,7 +16,7 @@ type Props = {
 
 const Register: React.FC<Props> = ({ validation, registerAccount }: Props) => {
   const history = useHistory();
-  const { setCurrentAccount } = useContext(ApiContext);
+  const { setCurrentAccount } = useRecoilValue(currentAccountState);
 
   const [state, setState] = useRecoilState(registerState);
 
