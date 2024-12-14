@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { Link, useHistory } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 
 import { loginState, FormStatus, Input, SubmitButton } from '@/presentation/pages/login/components';
 import { currentAccountState, Footer, LoginHeader } from '@/presentation/components';
@@ -17,13 +17,18 @@ type Props = {
 
 const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
   const history = useHistory();
+
   const { setCurrentAccount } = useRecoilValue(currentAccountState);
+
+  const resetLoginState = useResetRecoilState(loginState);
 
   const [state, setState] = useRecoilState(loginState);
 
-  useEffect(() => { validate('email'); }, [state.email]);
+  useEffect(() => resetLoginState(), []);
 
-  useEffect(() => { validate('password'); }, [state.password]);
+  useEffect(() => validate('email'), [state.email]);
+
+  useEffect(() => validate('password'), [state.password]);
 
   const validate = (field: string): void => {
     const { email, password } = state;

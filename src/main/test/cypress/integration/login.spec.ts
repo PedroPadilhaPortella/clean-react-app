@@ -24,6 +24,14 @@ describe('Login', () => {
     cy.getByTestId('error-wrap').should('not.have.descendants');
   });
 
+  it('Should reset state on page load', () => {
+    cy.getByTestId('email').focus().type(faker.internet.email());
+    testInputStatus('email');
+    cy.getByTestId('register').click();
+    cy.getByTestId('login').click();
+    testInputStatus('email', 'Campo obrigatório');
+  });
+
   it('Should present error state when form is invalid', () => {
     cy.getByTestId('email').type(faker.random.word());
     cy.getByTestId('password').type(faker.random.alphaNumeric(3));
