@@ -1,10 +1,9 @@
-import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 
-import { SurveyItem } from '@/presentation/pages/survey-list/components';
-import { IconName } from '@/presentation/components';
 import { mockSurveyModel } from '@/domain/test';
-import { Router } from 'react-router-dom';
+import { IconName } from '@/presentation/components';
+import { SurveyItem } from '@/presentation/pages/survey-list/components';
+import { renderWithHistory } from '@/presentation/test';
 import { createMemoryHistory, MemoryHistory } from 'history';
 
 type SutTypes = {
@@ -14,11 +13,10 @@ type SutTypes = {
 const createSut = (survey = mockSurveyModel()): SutTypes => {
   const history = createMemoryHistory({ initialEntries: ['/'] });
 
-  render(
-    <Router history={history}>
-      <SurveyItem survey={survey} />
-    </Router>
-  );
+  renderWithHistory({
+    history,
+    Page: () => SurveyItem({ survey })
+  });
 
   return { history };
 };

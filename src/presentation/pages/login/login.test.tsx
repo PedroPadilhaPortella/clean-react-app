@@ -1,24 +1,19 @@
-import React from 'react';
-
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import faker from 'faker';
+import { createMemoryHistory } from 'history';
 
-import { AuthenticationSpy, mockAccountModel } from '@/domain/test';
-import { currentAccountState } from '@/presentation/components';
 import { InvalidCredentialsError } from '@/domain/errors';
-import { ValidationStub } from '@/presentation/test';
+import { AuthenticationSpy } from '@/domain/test';
 import { Authentication } from '@/domain/usecases';
 import { Login } from '@/presentation/pages';
+import { renderWithHistory, ValidationStub } from '@/presentation/test';
 
 const history = createMemoryHistory({ initialEntries: ['/login'] });
 
 type SutTypes = {
   validationStub: ValidationStub
   authenticationSpy: AuthenticationSpy
-  setCurrentAccountMock: (account: Authentication.Model) => Promise<void>
+  setCurrentAccountMock: (account: Authentication.Model) => void
 };
 
 type SutParams = {
@@ -27,25 +22,13 @@ type SutParams = {
 
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
-  const setCurrentAccountMock = jest.fn();
   const authenticationSpy = new AuthenticationSpy();
   validationStub.errorMessage = params?.validationError;
 
-  const mockedState = {
-    setCurrentAccount: setCurrentAccountMock,
-    getCurrentAccount: () => mockAccountModel()
-  };
-
-  render(
-    <RecoilRoot initializeState={({ set }) => set(currentAccountState, mockedState)}>
-      <Router history={history}>
-        <Login
-          validation={validationStub}
-          authentication={authenticationSpy}
-        />
-      </Router>
-    </RecoilRoot>
-  );
+  const { setCurrentAccountMock } = renderWithHistory({
+    history,
+    Page: () => Login({ validation: validationStub, authentication: authenticationSpy })
+  });
 
   return { validationStub, authenticationSpy, setCurrentAccountMock };
 };

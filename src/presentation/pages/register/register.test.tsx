@@ -1,23 +1,18 @@
-import React from 'react';
-
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import faker from 'faker';
+import { createMemoryHistory } from 'history';
 
-import { mockAccountModel, RegisterAccountSpy } from '@/domain/test';
-import { currentAccountState } from '@/presentation/components';
 import { InvalidCredentialsError } from '@/domain/errors';
-import { ValidationStub } from '@/presentation/test';
+import { RegisterAccountSpy } from '@/domain/test';
 import { RegisterAccount } from '@/domain/usecases';
 import { Register } from '@/presentation/pages';
+import { renderWithHistory, ValidationStub } from '@/presentation/test';
 
 const history = createMemoryHistory({ initialEntries: ['/register'] });
 
 type SutTypes = {
   registerAccountSpy: RegisterAccountSpy
-  setCurrentAccountMock: (account: RegisterAccount.Model) => Promise<void>
+  setCurrentAccountMock: (account: RegisterAccount.Model) => void
 };
 
 type SutParams = {
@@ -27,24 +22,12 @@ type SutParams = {
 const createSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
   const registerAccountSpy = new RegisterAccountSpy();
-  const setCurrentAccountMock = jest.fn();
   validationStub.errorMessage = params?.validationError;
 
-  const mockedState = {
-    setCurrentAccount: setCurrentAccountMock,
-    getCurrentAccount: () => mockAccountModel()
-  };
-
-  render(
-    <RecoilRoot initializeState={({ set }) => set(currentAccountState, mockedState)}>
-      <Router history={history}>
-        <Register
-          validation={validationStub}
-          registerAccount={registerAccountSpy}
-        />
-      </Router>
-    </RecoilRoot>
-  );
+  const { setCurrentAccountMock } = renderWithHistory({
+    history,
+    Page: () => Register({ validation: validationStub, registerAccount: registerAccountSpy })
+  });
 
   return { registerAccountSpy, setCurrentAccountMock };
 };
