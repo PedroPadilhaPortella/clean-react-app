@@ -4,7 +4,8 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import { getCurrentAccountAdapter, setCurrentAccountAdapter } from '@/main/adapters/current-account.adapter';
 import { loginFactory, registerFactory, surveyListFactory, surveyResultFactory } from '@/main/factories/pages';
-import { currentAccountState, PrivateRoute } from '@/presentation/components';
+import { currentAccountState } from '@/presentation/components';
+import { PrivateRoute } from '@/main/proxies';
 
 const Router: React.FC = () => {
   const state = {
